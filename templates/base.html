@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Micro Finance</title>
+  </head>
+  <body>
+    <div>
+      <a href="{% url 'home' %}">Home</a>
+      <a href="{% url 'about' %}">About</a>
+      <a href="{% url 'contact' %}">Contact</a>
+    </div>
+
+    {% block content %}
+
+    {% endblock %}
+
+  </body>
+</html>
+
