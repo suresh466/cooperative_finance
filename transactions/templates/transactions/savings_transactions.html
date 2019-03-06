@@ -1,2 +1,22 @@
+{% if form %}
+<form method="POST">
+
+  {% csrf_token %}
+  {{ form.as_p }}
+
+  <input type="submit" value="View" />
+</form>
+
+{% else %}
+{% for transaction in transactions.all %}
+
+{{ transaction.account }}
+{{ transaction.amount }}
+<br />
+
+{% endfor %}
+
 <h1>test</h1>
 {{ transactions_sum }}
+
+{% endif %}
