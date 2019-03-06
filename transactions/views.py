@@ -106,6 +106,7 @@ def saving_deposit_transaction(request):
         context = {
             'transactions': transactions,
             'transactions_sum': transactions_sum,
+            'title': "Deposit",
         }
 
         #return redirect("saving_transaction:transaction")
@@ -113,6 +114,7 @@ def saving_deposit_transaction(request):
 
     context = {
         'form': form,
+        'title': "Deposit",
     }
 
     return render(request, template, context)
@@ -133,11 +135,13 @@ def saving_withdraw_transaction(request):
         context = {
             'transactions':transactions,
             'transactions_sum':transactions_sum,
+            'title': "Withdrawl",
         }
 
         return render(request, template, context)
     context = {
         'form':form,
+        'title': "Withdrawl"
     }
 
     return render(request, template, context)

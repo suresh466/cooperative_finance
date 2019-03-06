@@ -1,22 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
 {% if form %}
 <form method="POST">
-
   {% csrf_token %}
   {{ form.as_p }}
-
   <input type="submit" value="View" />
 </form>
 
 {% else %}
-{% for transaction in transactions.all %}
+{% if messages %}
+{% for message in messages %}
 
-{{ transaction.account }}
-{{ transaction.amount }}
-<br />
+<p>{{message}}</p>
 
 {% endfor %}
 
-<h1>test</h1>
-{{ transactions_sum }}
+{% endif %}
+
+<h3>{{title}} Transactions</h3>
+<table>
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Name</th>
+      <th>Details</th>
+      <th>Amount</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+    {% for transaction in transactions.all %}
+
+    <th scope="row">{{forloop.counter}}</th>
+    <td>{{ transaction.account }}</td>
+    <td>{{title}}</td>
+    <td>{{ transaction.amount }}</td>
+    </tr>
+
+    {% endfor %}
+    <tr>
+      <th scope="row">Total</th>
+      <td>{{ transactions_sum }}</td>
+    </tr>
+  </tbody>
+</table>
+<hr>
 
 {% endif %}
+
+{% endblock content %}
