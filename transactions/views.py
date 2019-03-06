@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.db.models import Sum
 
 from .forms import SavingDepositForm,SavingWithdrawalForm
-from .models import SavingDeposit
+from .models import SavingDeposit,SavingWithdrawal
 
 # Create your views here.
 
@@ -71,9 +71,21 @@ def saving_deposit_transactions(request):
 
     context = {
         'transactions': transactions,
-        'transactions_sum': transactions_sum
+        'transactions_sum': transactions_sum,
     }
 
     return render(request, template, context)
 
+def saving_withdraw_transactions(request):
+    template = 'transactions/savings_transactions.html'
+
+    transactions = SavingWithdrawal.objects
+    transactions_sum = transactions.aggregate(Sum('amount'))['amount__sum']
+
+    context = {
+        'transactions': transactions,
+        'transactions_sum': transactions_sum,
+    }
+
+    return render(request, template, context)
 
