@@ -9,7 +9,7 @@ class SavingDeposit(models.Model):
     def __str__(self):
         return self.account.owner.first_name
 
-class SavingWithdrawl(models.Model):
+class SavingWithdrawal(models.Model):
     account = models.ForeignKey(SavingAccount, on_delete=models.CASCADE)
     amount = models.PositiveIntegerField()
 

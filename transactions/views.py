@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 
-from .forms import SavingDepositForm,SavingWithdrawlForm
+from .forms import SavingDepositForm,SavingWithdrawalForm
 
 # Create your views here.
 
@@ -31,12 +31,12 @@ def saving_deposit_view(request):
 def saving_withdraw_view(request):
     template = 'transactions/savings_form.html'
 
-    form = SavingWithdrawlForm(request.POST or None)
+    form = SavingWithdrawalForm(request.POST or None)
 
     if form.is_valid():
         withdraw = form.save(commit=False)
 
-        # checks if withdrawl amount is valid
+        # checks if withdrawal amount is valid
         if(withdraw.account.current_balance >= withdraw.amount and
            withdraw.amount >= 10):
             withdraw.account.current_balance -= withdraw.amount
