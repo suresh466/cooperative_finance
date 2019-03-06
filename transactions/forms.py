@@ -13,4 +13,8 @@ class SavingWithdrawalForm(forms.ModelForm):
         model = SavingWithdrawal
         fields = ('__all__')
 
+class SavingDepositTransactionForm(forms.ModelForm):
 
+    class Meta:
+        model = SavingDeposit
+        fields = ('account',)
