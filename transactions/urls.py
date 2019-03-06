@@ -8,5 +8,5 @@ urlpatterns = [
     path('deposit/', saving_deposit_view, name='deposit'),
     path('withdraw/', saving_withdraw_view, name='withdraw'),
     path('deposit/transactions/', saving_deposit_transactions, name='transactions'),
-    path('withdraw/transactions/', saving_withdraw_transactions, name='transactions'),
+    path('withdraw/transactions/', saving_withdraw_transactions, name='withdraw_transactions'),
 ]
