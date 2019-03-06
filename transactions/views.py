@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.db.models import Sum
 
 from .forms import SavingDepositForm,SavingWithdrawalForm
+from .models import SavingDeposit
 
 # Create your views here.
 
@@ -60,3 +62,18 @@ def saving_withdraw_view(request):
     }
 
     return render(request, template, context)
+
+def saving_deposit_transactions(request):
+    template = 'transactions/savings_transactions.html'
+
+    transactions = SavingDeposit.objects
+    transactions_sum = transactions.aggregate(Sum('amount'))['amount__sum']
+
+    context = {
+        'transactions': transactions,
+        'transactions_sum': transactions_sum
+    }
+
+    return render(request, template, context)
+
+
