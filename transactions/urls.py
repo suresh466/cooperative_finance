@@ -11,4 +11,5 @@ urlpatterns = [
     path('deposit/transactions/', saving_deposit_transactions, name='transactions'),
     path('withdraw/transactions/', saving_withdraw_transactions, name='withdraw_transactions'),
     path('deposit/transaction/', saving_deposit_transaction, name='transaction'),
+    path('withdraw/transaction/', saving_deposit_transaction, name='withdraw_transaction'),
 ]
