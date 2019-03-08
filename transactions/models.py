@@ -25,4 +25,10 @@ class LoanIssue(models.Model):
     def __str__(self):
         return self.account.owner.first_name
 
+class LoanPayment(models.Model):
+    account = models.ForeignKey(LoanAccount, on_delete=models.CASCADE)
+    principal = models.PositiveIntegerField()
+
+    def __str__(self):
+        return self.account.owner.first_name
 
