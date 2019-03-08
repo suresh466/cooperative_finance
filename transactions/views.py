@@ -179,6 +179,18 @@ def loan_payment(request):
         #deducts payment principal from the selected loan issue and total principal
         payment.loan_num.principal -= payment.principal
         payment.loan_num.account.total_principal -= payment.principal
-        payment.account.save()
-        payment.save()
-        mess
+        payment.loan_num.account.save()
+        payment.loan_num.save()
+        messages.success(request,
+                         'you have successfully paid Rs. {} only loan to the account number {}.'
+                         .format(payment.principal,payment.loan_num.account.owner.mem_number))
+        return redirect("loan_transaction:pay")
+
+    context = {
+        'form': form,
+        'title': "Pay",
+    }
+
+    return render(request, template, context)
+
+
