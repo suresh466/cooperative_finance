@@ -4,12 +4,12 @@ from django.db.models import Sum
 
 from .forms import (SavingDepositForm,SavingWithdrawalForm,
                     SavingDepositTransactionForm,
-                    SavingWithdrawTransactionForm,)
+                    SavingWithdrawalTransactionForm,)
 from .models import SavingDeposit,SavingWithdrawal
 
 # Create your views here.
 
-def saving_deposit_view(request):
+def saving_deposit(request):
     template = 'transactions/savings_form.html'
 
     form = SavingDepositForm(request.POST or None)
@@ -32,7 +32,7 @@ def saving_deposit_view(request):
 
     return render(request, template, context)
 
-def saving_withdraw_view(request):
+def saving_withdrawal(request):
     template = 'transactions/savings_form.html'
 
     form = SavingWithdrawalForm(request.POST or None)
@@ -78,7 +78,7 @@ def saving_deposit_transactions(request):
 
     return render(request, template, context)
 
-def saving_withdraw_transactions(request):
+def saving_withdrawal_transactions(request):
     template = 'transactions/savings_transactions.html'
 
     transactions = SavingWithdrawal.objects
@@ -119,10 +119,10 @@ def saving_deposit_transaction(request):
 
     return render(request, template, context)
 
-def saving_withdraw_transaction(request):
+def saving_withdrawal_transaction(request):
     template = 'transaction/saving_transactions.html'
 
-    form = SavingWithdrawTransactionForm(request.POST or None)
+    form = SavingWithdrawalTransactionForm(request.POST or None)
 
     if form.is_valid():
         ordered_account = form.save(commit=False)
@@ -135,13 +135,13 @@ def saving_withdraw_transaction(request):
         context = {
             'transactions':transactions,
             'transactions_sum':transactions_sum,
-            'title': "Withdrawl",
+            'title': "Withdrawal",
         }
 
         return render(request, template, context)
     context = {
         'form':form,
-        'title': "Withdrawl"
+        'title': "Withdrawal"
     }
 
     return render(request, template, context)
