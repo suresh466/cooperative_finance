@@ -5,7 +5,8 @@ from django.db.models import Sum
 from .forms import (SavingDepositForm,SavingWithdrawalForm,
                     SavingDepositTransactionForm,
                     SavingWithdrawalTransactionForm,
-                    LoanIssueForm,LoanPaymentForm,)
+                    LoanIssueForm,LoanPaymentForm,
+                    LoanIssueTransactionForm,LoanPaymentTransactionForm,)
 
 from .models import (SavingDeposit,SavingWithdrawal,
                      LoanIssue,LoanPayment,)
@@ -218,6 +219,60 @@ def loan_payment_transactions(request):
     context = {
         'transactions': transactions,
         'transactions_sum': transactions_sum,
+    }
+
+    return render(request, template, context)
+
+def loan_issue_transaction(request):
+    template = 'transactions/loans_transactions.html'
+
+    form = LoanIssueTransactionForm(request.POST or None)
+
+    if form.is_valid():
+        ordered_loan = form.save(commit=False)
+        transactions = LoanIssue.objects.filter(loan_num = ordered_loan.loan_num.loan_num)
+        transactions_sum = transactions.aggregate(Sum('principal'))['principal__sum']
+        messages.success(request,
+                        'Loan Issue transactions of loan number {}.'
+                        .format(ordered_loan.loan_num))
+
+        context = {
+            'transactions': transactions,
+            'transactions_sum': transactions_sum,
+            'title': 'Issue'
+        }
+        return render(request, template, context)
+    context = {
+        'form':form,
+        'title':"Show Issue",
+    }
+
+    return render(request, template, context)
+
+def loan_payment_transaction(request):
+    template = 'transactions/loans_transactions.html'
+
+    form = LoanPaymentTransactionForm(request.POST or None)
+
+    if form.is_valid():
+        ordered_loan = form.save(commit=False)
+        transactions = LoanPayment.objects.filter(loan_num = ordered_loan.loan_num)
+        transactions_sum = transactions.aggregate(Sum('principal'))['principal__sum']
+        messages.success(request,
+                         'Loan Payment transactions of loan number {}.'
+                         .format(ordered_loan.loan_num))
+
+        context = {
+            'transactions': transactions,
+            'transactions_sum': transactions_sum,
+            'title': "Show Payment",
+        }
+
+        return render(request, template, context)
+
+    context = {
+        'form': form,
+        'title': "Show Payment",
     }
 
     return render(request, template, context)
