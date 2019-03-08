@@ -20,15 +20,16 @@ class SavingWithdrawal(models.Model):
 
 class LoanIssue(models.Model):
     account = models.ForeignKey(LoanAccount, on_delete=models.CASCADE)
+    loan_num = models.CharField(unique=True, max_length=255)
     principal = models.PositiveIntegerField()
 
     def __str__(self):
         return self.account.owner.first_name
 
 class LoanPayment(models.Model):
-    account = models.ForeignKey(LoanAccount, on_delete=models.CASCADE)
+    loan_num = models.ForeignKey(LoanIssue, on_delete=models.CASCADE)
     principal = models.PositiveIntegerField()
 
     def __str__(self):
-        return self.account.owner.first_name
+        return self.loan_num.account.owner.first_name
 
