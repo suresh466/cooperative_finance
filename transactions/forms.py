@@ -20,7 +20,7 @@ class SavingDepositTransactionForm(forms.ModelForm):
         model = SavingDeposit
         fields = ('account',)
 
-class SavingWithdrawTransactionForm(forms.ModelForm):
+class SavingWithdrawalTransactionForm(forms.ModelForm):
 
     class Meta:
         model = SavingDeposit
