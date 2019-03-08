@@ -4,7 +4,8 @@ from django.db.models import Sum
 
 from .forms import (SavingDepositForm,SavingWithdrawalForm,
                     SavingDepositTransactionForm,
-                    SavingWithdrawalTransactionForm,)
+                    SavingWithdrawalTransactionForm,
+                    LoanIssueForm,)
 from .models import SavingDeposit,SavingWithdrawal
 
 # Create your views here.
@@ -145,4 +146,27 @@ def saving_withdrawal_transaction(request):
     }
 
     return render(request, template, context)
+
+def loan_issue(request):
+    template = 'transactions/loans_form.html'
+
+    form = LoanIssueForm(request.POST or None)
+
+    if form.is_valid():
+        issue = form.save(commit=False)
+        #adds issued principal to the users account total principal
+        issue.account.total_principal += issue.principal
+        issue.account.save()
+        issue.save()
+        messages.success(request,
+                         'You have successfully issued Rs. {} only loan to the account number {}.'
+                         .format(issue.principal,issue.account.owner.mem_number))
+        return redirect("loan_transaction:issue")
+    context = {
+        'form': form,
+        'title': "Issue",
+    }
+
+    return render(request, template, context)
+
 

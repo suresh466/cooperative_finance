@@ -23,4 +23,5 @@ urlpatterns = [
     path('about/', static_pages.views.about, name="about"),
     path('contact/', static_pages.views.contact, name="contact"),
     path('savings/', include('transactions.urls')),
+    path('loans/', include('transactions.loan_urls')),
 ]
