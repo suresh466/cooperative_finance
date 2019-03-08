@@ -6,7 +6,9 @@ from .forms import (SavingDepositForm,SavingWithdrawalForm,
                     SavingDepositTransactionForm,
                     SavingWithdrawalTransactionForm,
                     LoanIssueForm,LoanPaymentForm,)
-from .models import SavingDeposit,SavingWithdrawal
+
+from .models import (SavingDeposit,SavingWithdrawal,
+                     LoanIssue,LoanPayment,)
 
 # Create your views here.
 
@@ -181,6 +183,7 @@ def loan_payment(request):
         payment.loan_num.account.total_principal -= payment.principal
         payment.loan_num.account.save()
         payment.loan_num.save()
+        payment.save()
         messages.success(request,
                          'you have successfully paid Rs. {} only loan to the account number {}.'
                          .format(payment.principal,payment.loan_num.account.owner.mem_number))
@@ -189,6 +192,32 @@ def loan_payment(request):
     context = {
         'form': form,
         'title': "Pay",
+    }
+
+    return render(request, template, context)
+
+def loan_issue_transactions(request):
+    template = 'transactions/loans_transactions.html'
+
+    transactions = LoanIssue.objects
+    transactions_sum = transactions.aggregate(Sum('principal'))['principal__sum']
+
+    context = {
+        'transactions': transactions,
+        'transactions_sum': transactions_sum,
+    }
+
+    return render(request, template, context)
+
+def loan_payment_transactions(request):
+    template = 'transactions/loans_transactions.html'
+
+    transactions = LoanPayment.objects
+    transactions_sum = transactions.aggregate(Sum('principal'))['principal__sum']
+
+    context = {
+        'transactions': transactions,
+        'transactions_sum': transactions_sum,
     }
 
     return render(request, template, context)
