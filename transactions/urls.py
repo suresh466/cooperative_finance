@@ -2,8 +2,7 @@ from django.urls import path
 
 from .views import (saving_deposit, saving_withdrawal,
                     saving_deposit_transactions,saving_withdrawal_transactions,
-                    saving_deposit_transaction,
-                    loan_issue,)
+                    saving_deposit_transaction,)
 
 app_name = 'saving_transaction'
 urlpatterns = [
