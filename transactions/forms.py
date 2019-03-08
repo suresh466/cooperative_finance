@@ -31,7 +31,7 @@ class LoanIssueForm(forms.ModelForm):
         model = LoanIssue
         fields = ('__all__')
 
-class LoanPayment(forms.ModelForm):
+class LoanPaymentForm(forms.ModelForm):
     class Meta:
         model = LoanPayment
         fields = ('__all__')
