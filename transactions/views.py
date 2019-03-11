@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.db.models import Sum
 
@@ -6,7 +6,8 @@ from .forms import (SavingDepositForm,SavingWithdrawalForm,
                     SavingDepositTransactionForm,
                     SavingWithdrawalTransactionForm,
                     LoanIssueForm,LoanPaymentForm,
-                    LoanIssueTransactionForm,LoanPaymentTransactionForm,)
+                    LoanIssueTransactionForm,LoanPaymentTransactionForm,
+                    LoanApproveForm,)
 
 from .models import (SavingDeposit,SavingWithdrawal,
                      LoanIssue,LoanPayment,)
@@ -277,4 +278,47 @@ def loan_payment_transaction(request):
 
     return render(request, template, context)
 
+def loan_approve(request):
+    template = 'transactions/loans_form.html'
+
+    form = LoanIssueTransactionForm(request.POST or None)
+
+    if form.is_valid():
+        print("*******first")
+        loan = form.save(commit=False)
+        loan_num = loan.loan_num.loan_num
+        ordered_loan = get_object_or_404(LoanIssue, loan_num = loan_num)
+
+        #checks if the post request coming through is from form_two
+        if 'confirm' in request.POST:
+            form_two = LoanApproveForm(request.POST, instance=ordered_loan)
+        else:
+            form_two = LoanApproveForm(instance=ordered_loan)
+
+        if form_two.is_valid():
+            print("*********final*******")
+            issue = form_two.save(commit=False)
+            #adds issued principal to the users total_principal of loan ac
+            issue.account.total_principal += issue.principal
+            issue.account.save()
+            issue.save()
+            messages.success(
+                request,
+                'You have successfully issued Rs. {} loan to the account number {}.'
+                .format(issue.principal,issue.account.owner.mem_number))
+
+            return redirect("loan_transaction:approve")
+
+        context = {
+            'form': form_two,
+            'title': "confirm",
+        }
+
+        return render(request, template, context)
+
+    context = {
+        'form': form,
+        'title': "approve",
+    }
+    return render(request, template, context)
 

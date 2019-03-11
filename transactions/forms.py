@@ -45,3 +45,10 @@ class LoanIssueTransactionForm(forms.ModelForm):
     class Meta:
         model = LoanPayment
         fields = ('loan_num',)
+
+class LoanApproveForm(forms.ModelForm):
+    class Meta:
+        model = LoanIssue
+        fields = ('__all__')
+
+
