@@ -158,9 +158,10 @@ def loan_issue(request):
 
     if form.is_valid():
         issue = form.save(commit=False)
-        #adds issued principal to the users account total principal
-        issue.account.total_principal += issue.principal
-        issue.account.save()
+        if issue.status == 'Approved':
+            #adds issued principal to the users account total principal
+            issue.account.total_principal += issue.principal
+            issue.account.save()
         issue.save()
         messages.success(request,
                          'You have successfully issued Rs. {} only loan to the account number {}.'
@@ -284,7 +285,6 @@ def loan_approve(request):
     form = LoanIssueTransactionForm(request.POST or None)
 
     if form.is_valid():
-        print("*******first")
         loan = form.save(commit=False)
         loan_num = loan.loan_num.loan_num
         ordered_loan = get_object_or_404(LoanIssue, loan_num = loan_num)
@@ -296,8 +296,13 @@ def loan_approve(request):
             form_two = LoanApproveForm(instance=ordered_loan)
 
         if form_two.is_valid():
-            print("*********final*******")
             issue = form_two.save(commit=False)
+            if issue.status == 'Approved':
+                messages.success(
+                    request,
+                    'This loan is already approved')
+
+                return redirect("loan_transaction:approve")
             #adds issued principal to the users total_principal of loan ac
             issue.account.total_principal += issue.principal
             issue.account.save()
