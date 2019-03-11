@@ -286,6 +286,12 @@ def loan_approve(request):
 
     if form.is_valid():
         loan = form.save(commit=False)
+        if loan.loan_num.status == 'Approved':
+            messages.success(
+                request,
+                'This loan is already approved')
+            return redirect("loan_transaction:approve")
+
         loan_num = loan.loan_num.loan_num
         ordered_loan = get_object_or_404(LoanIssue, loan_num = loan_num)
 
@@ -297,12 +303,6 @@ def loan_approve(request):
 
         if form_two.is_valid():
             issue = form_two.save(commit=False)
-            if issue.status == 'Approved':
-                messages.success(
-                    request,
-                    'This loan is already approved')
-
-                return redirect("loan_transaction:approve")
             #adds issued principal to the users total_principal of loan ac
             issue.account.total_principal += issue.principal
             issue.account.save()
