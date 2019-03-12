@@ -22,6 +22,6 @@ urlpatterns = [
     path('', static_pages.views.home, name="home"),
     path('about/', static_pages.views.about, name="about"),
     path('contact/', static_pages.views.contact, name="contact"),
-    path('savings/', include('transactions.urls')),
-    path('loans/', include('transactions.loan_urls')),
+    path('savings/', include('savings.urls')),
+    path('loans/', include('loans.urls')),
 ]
