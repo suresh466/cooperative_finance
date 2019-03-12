@@ -73,8 +73,9 @@ def saving_deposit_transactions(request):
     savings_sum = savings.aggregate(Sum('amount'))['amount__sum']
 
     context = {
-        'savings': savings,
-        'savings_sum': savings_sum,
+        'transactions': savings,
+        'transactions_sum': savings_sum,
+        'title': "Deposit",
     }
 
     return render(request, template, context)
@@ -86,8 +87,9 @@ def saving_withdrawal_transactions(request):
     savings_sum = savings.aggregate(Sum('amount'))['amount__sum']
 
     context = {
-        'savings': savings,
-        'savings_sum': savings_sum,
+        'transactions': savings,
+        'transactions_sum': savings_sum,
+        'title': "Withdrawal",
     }
 
     return render(request, template, context)
@@ -105,8 +107,8 @@ def saving_deposit_transaction(request):
                          'Deposit savings of savings account number {}.'
                          .format(ordered_account.account.owner.mem_number))
         context = {
-            'savings': savings,
-            'savings_sum': savings_sum,
+            'transactions': savings,
+            'transactions_sum': savings_sum,
             'title': "Deposit",
         }
 
@@ -121,28 +123,28 @@ def saving_deposit_transaction(request):
     return render(request, template, context)
 
 def saving_withdrawal_transaction(request):
-    template = 'transaction/saving_transactions.html'
+    template = 'savings/savings_transactions.html'
 
     form = SavingWithdrawalTransactionForm(request.POST or None)
 
     if form.is_valid():
         ordered_account = form.save(commit=False)
-        savings = SavingWithdraw.objects.filter(account = ordered_account.account)
-        savings_sum = savings.aggregate(Sum('amount'))['admount__sum']
+        savings = SavingWithdrawal.objects.filter(account = ordered_account.account)
+        savings_sum = savings.aggregate(Sum('amount'))['amount__sum']
         messages.success(request,
                          'Withdrawal ransactions of savings account number {}.'
                          .format(ordered_account.account.owner.mem_number))
 
         context = {
-            'savings':savings,
-            'savings_sum':savings_sum,
+            'transactions':savings,
+            'transactions_sum':savings_sum,
             'title': "Withdrawal",
         }
 
         return render(request, template, context)
     context = {
         'form':form,
-        'title': "Withdrawal"
+        'title': "Withdrawal",
     }
 
     return render(request, template, context)

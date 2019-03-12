@@ -1,8 +1,8 @@
 from django.urls import path
 
-from .views import (saving_deposit, saving_withdrawal,
-                    saving_deposit_transactions,saving_withdrawal_transactions,
-                    saving_deposit_transaction,)
+from .views import (saving_deposit,saving_withdrawal,
+        saving_deposit_transactions,saving_withdrawal_transactions,
+        saving_deposit_transaction,saving_withdrawal_transaction,)
 
 app_name = 'saving_transaction'
 urlpatterns = [
@@ -11,5 +11,5 @@ urlpatterns = [
     path('deposit/transactions/', saving_deposit_transactions, name='transactions'),
     path('withdraw/transactions/', saving_withdrawal_transactions, name='withdraw_transactions'),
     path('deposit/transaction/', saving_deposit_transaction, name='transaction'),
-    path('withdraw/transaction/', saving_deposit_transaction, name='withdraw_transaction'),
+    path('withdraw/transaction/', saving_withdrawal_transaction, name='withdraw_transaction'),
 ]

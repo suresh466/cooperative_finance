@@ -69,8 +69,9 @@ def loan_issue_transactions(request):
     loans_sum = loans.aggregate(Sum('principal'))['principal__sum']
 
     context = {
-        'loans': loans,
-        'loans_sum': loans_sum,
+        'transactions': loans,
+        'transactions_sum': loans_sum,
+        'title': "Issue",
     }
 
     return render(request, template, context)
@@ -82,8 +83,9 @@ def loan_payment_transactions(request):
     loans_sum = loans.aggregate(Sum('principal'))['principal__sum']
 
     context = {
-        'loans': loans,
-        'loans_sum': loans_sum,
+        'transactions': loans,
+        'transactions_sum': loans_sum,
+        'title': "Payment",
     }
 
     return render(request, template, context)
@@ -102,14 +104,14 @@ def loan_issue_transaction(request):
                         .format(ordered_loan.loan_num))
 
         context = {
-            'loans': loans,
-            'loans_sum': loans_sum,
-            'title': 'Issue'
+            'transactions': loans,
+            'transactions_sum': loans_sum,
+            'title': 'Issued',
         }
         return render(request, template, context)
     context = {
         'form':form,
-        'title':"Show Issue",
+        'title':"Issued",
     }
 
     return render(request, template, context)
@@ -128,16 +130,16 @@ def loan_payment_transaction(request):
                          .format(ordered_loan.loan_num))
 
         context = {
-            'loans': loans,
-            'loans_sum': loans_sum,
-            'title': "Show Payment",
+            'transactions': loans,
+            'transactions_sum': loans_sum,
+            'title': "Payment",
         }
 
         return render(request, template, context)
 
     context = {
         'form': form,
-        'title': "Show Payment",
+        'title': "Payment",
     }
 
     return render(request, template, context)
