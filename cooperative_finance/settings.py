@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'static_pages',
     'members',
     'savings',
-    'transactions',
     'loans',
 ]
 
