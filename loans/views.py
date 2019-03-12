@@ -4,8 +4,7 @@ from django.contrib import messages
 from django.db.models import Sum
 
 from .forms import (LoanIssueForm,LoanPaymentForm,
-        LoanIssueTransactionForm,LoanPaymentTransactionForm,
-        LoanApproveForm,)
+       GetLoanNumForm,) 
                     
                     
                     
@@ -93,7 +92,7 @@ def loan_payment_transactions(request):
 def loan_issue_transaction(request):
     template = 'loans/loans_transactions.html'
 
-    form = LoanIssueTransactionForm(request.POST or None)
+    form = GetLoanNumForm(request.POST or None)
 
     if form.is_valid():
         ordered_loan = form.save(commit=False)
@@ -119,7 +118,7 @@ def loan_issue_transaction(request):
 def loan_payment_transaction(request):
     template = 'loans/loans_transactions.html'
 
-    form = LoanPaymentTransactionForm(request.POST or None)
+    form = GetLoanNumForm(request.POST or None)
 
     if form.is_valid():
         ordered_loan = form.save(commit=False)
@@ -147,7 +146,7 @@ def loan_payment_transaction(request):
 def loan_approve(request):
     template = 'loans/loans_form.html'
 
-    form = LoanIssueTransactionForm(request.POST or None)
+    form = LoanIssueForm(request.POST or None)
 
     if form.is_valid():
         loan = form.save(commit=False)

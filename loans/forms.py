@@ -11,19 +11,7 @@ class LoanPaymentForm(forms.ModelForm):
         model = LoanPayment
         fields = ('__all__')
 
-class LoanPaymentTransactionForm(forms.ModelForm):
+class GetLoanNumForm(forms.ModelForm):
     class Meta:
         model = LoanPayment
         fields = ('loan_num',)
-
-class LoanIssueTransactionForm(forms.ModelForm):
-    class Meta:
-        model = LoanPayment
-        fields = ('loan_num',)
-
-class LoanApproveForm(forms.ModelForm):
-    class Meta:
-        model = LoanIssue
-        fields = ('__all__')
-
-

@@ -3,8 +3,7 @@ from django.contrib import messages
 from django.db.models import Sum
 
 from .forms import (SavingDepositForm,SavingWithdrawalForm,
-                    SavingDepositTransactionForm,
-                    SavingWithdrawalTransactionForm,)
+        GetSavingsAccountForm,)
                     
 from .models import (SavingDeposit,SavingWithdrawal,)
 
@@ -97,7 +96,7 @@ def saving_withdrawal_transactions(request):
 def saving_deposit_transaction(request):
     template = 'savings/savings_transactions.html'
 
-    form = SavingDepositTransactionForm(request.POST or None)
+    form = GetSavingsAccountForm(request.POST or None)
 
     if form.is_valid():
         ordered_account = form.save(commit=False)
@@ -125,7 +124,7 @@ def saving_deposit_transaction(request):
 def saving_withdrawal_transaction(request):
     template = 'savings/savings_transactions.html'
 
-    form = SavingWithdrawalTransactionForm(request.POST or None)
+    form = GetSavingsAccountForm(request.POST or None)
 
     if form.is_valid():
         ordered_account = form.save(commit=False)
