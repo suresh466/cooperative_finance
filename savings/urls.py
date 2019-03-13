@@ -2,10 +2,12 @@ from django.urls import path
 
 from .views import (saving_deposit,saving_withdrawal,
         saving_deposit_transactions,saving_withdrawal_transactions,
-        saving_deposit_transaction,saving_withdrawal_transaction,)
+        saving_deposit_transaction,saving_withdrawal_transaction,
+        saving_account,)
 
 app_name = 'saving_transaction'
 urlpatterns = [
+    path('create/', saving_account, name='create'),
     path('deposit/', saving_deposit, name='deposit'),
     path('withdraw/', saving_withdrawal, name='withdraw'),
     path('deposit/transactions/', saving_deposit_transactions, name='transactions'),

@@ -4,13 +4,29 @@ from django.contrib import messages
 from django.db.models import Sum
 
 from .forms import (LoanIssueForm,LoanPaymentForm,
-       GetLoanNumForm,) 
+       GetLoanNumForm,LoanAccountForm) 
                     
                     
                     
 from .models import (LoanIssue,LoanPayment,)
 
 # Create your views here.
+
+def loan_account(request):
+    template = 'loans/loans_form.html'
+
+    form = LoanAccountForm(request.POST or None)
+
+    if form.is_valid():
+        form.save()
+        return redirect('home')
+
+    context = {
+            'form': form,
+            'title': "Create",
+            }
+
+    return render(request, template, context)
 
 
 def loan_issue(request):
