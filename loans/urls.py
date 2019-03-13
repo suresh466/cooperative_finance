@@ -8,6 +8,7 @@ from .views import (loan_issue,loan_payment,
 app_name = 'loan_transaction'
 
 urlpatterns = [
+    path('create/', loan_account, name='create'),
     path('pay/', loan_payment, name='pay'),
     path('issue/', loan_issue, name='issue'),
     path('issue/approve/', loan_approve, name='approve'),

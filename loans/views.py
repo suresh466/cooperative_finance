@@ -12,6 +12,20 @@ from .models import (LoanIssue,LoanPayment,)
 
 # Create your views here.
 
+def loan_account(request):
+    template = 'loans/loans_form.html'
+
+    form = LoanIssueForm(request.POST or None)
+
+    if form.is_valid():
+        form.save()
+        return redirect('home')
+
+    context = {
+            'form': form,
+            'title': "Create",
+            }
+
 
 def loan_issue(request):
     template = 'loans/loans_form.html'

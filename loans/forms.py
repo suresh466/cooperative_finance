@@ -1,5 +1,10 @@
 from django import forms
-from .models import (LoanIssue,LoanPayment,)
+from .models import (LoanIssue,LoanPayment,LoanAccount)
+
+class LoanAccountForm(forms.ModelForm):
+    class Meta:
+        model = LoanAccount
+        fields = ('__all__')
 
 class LoanIssueForm(forms.ModelForm):
     class Meta:
