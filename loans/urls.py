@@ -3,7 +3,7 @@ from django.urls import path
 from .views import (loan_issue,loan_payment,
                     loan_issue_transactions,loan_payment_transactions,
                     loan_issue_transaction,loan_payment_transaction,
-                    loan_approve,)
+                    loan_approve,loan_account)
 
 app_name = 'loan_transaction'
 
