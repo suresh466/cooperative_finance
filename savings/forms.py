@@ -1,5 +1,12 @@
 from django import forms
-from .models import (SavingDeposit,SavingWithdrawal,)
+from .models import (SavingDeposit,SavingWithdrawal,
+        SavingAccount,)
+
+class SavingAccountForm(forms.ModelForm):
+
+    class Meta:
+        model = SavingAccount
+        fields = ('__all__')
 
 class SavingDepositForm(forms.ModelForm):
 
@@ -13,7 +20,7 @@ class SavingWithdrawalForm(forms.ModelForm):
         model = SavingWithdrawal
         fields = ('__all__')
 
-class GetSavingsAccountForm(forms.ModelForm):
+class GetSavingAccountForm(forms.ModelForm):
 
     class Meta:
         model = SavingDeposit
