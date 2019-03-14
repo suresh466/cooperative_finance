@@ -24,4 +24,5 @@ urlpatterns = [
     path('contact/', static_pages.views.contact, name="contact"),
     path('savings/', include('savings.urls')),
     path('loans/', include('loans.urls')),
+    path('shares/', include('shares.urls')),
 ]

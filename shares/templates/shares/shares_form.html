@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if messages %}
+
+{% for message in messages %}
+
+<p>{{message}}</p>
+
+{% endfor %}
+
+{% endif %}
+
+<form method="POST">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <input type="submit" value="{{ title }}" />
+</form>
+
+{% endblock content %}
+
