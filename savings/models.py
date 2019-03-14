@@ -3,12 +3,6 @@ from members.models import Member
 
 # Create your models here.
 
-STATUS_CHOICE = (
-    ('Pending', 'Pending'),
-    ('Approved', 'Approved'),
-    )
-
-
 class SavingAccount(models.Model):
     owner = models.OneToOneField(Member, on_delete=models.CASCADE)
     current_balance = models.PositiveIntegerField()
