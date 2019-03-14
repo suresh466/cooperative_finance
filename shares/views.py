@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.db.models import Sum
 
 from .forms import (ShareAccountForm,ShareBuyForm,
-        ShareSellForm,)
+        ShareSellForm,GetShareAccountForm)
 
+from .models import (ShareBuy,ShareSell,)
 # Create your views here.
 
 def share_account(request):
@@ -67,6 +69,90 @@ def share_sell(request):
     context = {
             'form': form,
             'title': "Sell",
+            }
+
+    return render(request, template, context)
+
+def share_buy_transactions(request):
+    template = 'shares/shares_transactions.html'
+
+    shares = ShareBuy.objects
+    shares_sum = shares.aggregate(Sum('number'))['number__sum']
+
+    context = {
+            'transactions': shares,
+            'transactions_sum': shares_sum,
+            'title': "Buys",
+            }
+
+    return render(request, template, context)
+
+def share_sell_transactions(request):
+    template = 'shares/shares_transactions.html'
+
+    shares = ShareSell.objects
+    shares_sum = shares.aggregate(Sum('number'))['number__sum']
+
+    context = {
+            'transactions': shares,
+            'transaxtions_sum': shares_sum,
+            'title': "Sells",
+            }
+
+    return render(request, template, context)
+
+def share_buy_transaction(request):
+    template = 'shares/shares_transactions.html'
+
+    form = GetShareAccountForm(request.POST or None)
+
+    if form.is_valid():
+        ordered_account = form.save(commit=False)
+        shares = ShareBuy.objects.filter(account = ordered_account.account)
+        shares_sum = shares.aggregate(Sum('number'))['number__sum']
+        messages.success(request,
+                'Buys of share account number {}.'
+                .format(ordered_account.account.owner.mem_number))
+
+        context = {
+                'transactions': shares,
+                'transactions_sum': shares_sum,
+                'title': "Buys",
+                }
+
+        return render(request, template, context)
+
+    context = {
+            'form': form,
+            'title': "Buys",
+            }
+
+    return render(request, template, context)
+
+def share_sell_transaction(request):
+    template = 'shares/shares_transactions.html'
+
+    form = GetShareAccountForm(request.POST or None)
+
+    if form.is_valid():
+        ordered_account = form.save(commit=False)
+        shares = ShareSell.objects.filter(account = ordered_account.account)
+        shares_sum = shares.aggregate(Sum('number'))['number__sum']
+        messages.success(request,
+                'Sells of share account number {}.'
+                .format(ordered_account.account.owner.mem_number))
+
+        context = {
+                'transactions': shares,
+                'transactions_sum': shares_sum,
+                'title': "Sells",
+                }
+
+        return render(request, template, context)
+
+    context = {
+            'form': form,
+            'title': "Sells",
             }
 
     return render(request, template, context)

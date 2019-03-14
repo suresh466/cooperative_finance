@@ -20,3 +20,11 @@ class ShareSellForm(forms.ModelForm):
         model = ShareSell
         fields = ('__all__')
 
+class GetShareAccountForm(forms.ModelForm):
+
+    class Meta:
+        model = ShareSell
+        fields = ('account',)
+
+
+
