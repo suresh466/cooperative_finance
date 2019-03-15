@@ -40,7 +40,7 @@ def saving_deposit(request):
         messages.success(request,
                          'You Have successfully Deposited Rs. {} only to the account number {}.'
                          .format(deposit.amount,deposit.account.owner.mem_number))
-        return redirect("saving_transaction:deposit")
+        return redirect("savings:deposit")
 
     context = {
         'form': form,
@@ -68,7 +68,7 @@ def saving_withdrawal(request):
                 'You Have Withdrawn Rs. {} only from the account number {}.'
                 .format(withdraw.amount,withdraw.account.owner.mem_number))
 
-            return redirect("saving_transaction:withdraw")
+            return redirect("savings:withdraw")
         else:
             messages.error(
                 request,
@@ -128,7 +128,6 @@ def saving_deposit_transaction(request):
             'title': "Deposit",
         }
 
-        #return redirect("saving_transaction:transaction")
         return render(request, template, context)
 
     context = {
@@ -165,4 +164,7 @@ def saving_withdrawal_transaction(request):
 
     return render(request, template, context)
 
+def saving(request):
+    template = 'savings/savings.html'
 
+    return render(request, template)

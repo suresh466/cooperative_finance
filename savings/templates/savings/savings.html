@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>Savings Account Management</h2>
+
+<h3><a href="{% url 'savings:withdraw' %}">Withdraw</a></h3>
+<h3><a href="{% url 'savings:deposit' %}">Deposit</a></h3>
+<h3><a href="{% url 'savings:create' %}">Create</a></h3>
+<h4>Transactions</h4>
+<h3><a href="{% url 'savings:transactions' %}">All Transactions</a></h3>
+<h3><a href="{% url 'savings:transaction' %}">Single account Transactions</a></h3>
+<h3><a href="{% url 'savings:withdraw_transactions' %}">All Transactions</a></h3>
+<h3><a href="{% url 'savings:withdraw_transaction' %}">Single account Transactions</a></h3>
+
+{% endblock %}
+

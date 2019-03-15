@@ -5,16 +5,30 @@
     <title>Micro Finance</title>
   </head>
   <body>
+	  ===========
+	  Header area
+	  ===========
+	  <br>
+	  <br>
+	  <br>
     <div>
-      <a href="{% url 'home' %}">Home</a>
-      <a href="{% url 'about' %}">About</a>
-      <a href="{% url 'contact' %}">Contact</a>
+      <a href="{% url 'home' %}">Home</a> ||
+      <a href="{% url 'savings:saving' %}">Savings</a> ||
     </div>
 
     {% block content %}
 
     {% endblock %}
-
+	  <br>
+	  <br>
+	  <br>
+    ===========
+    Footer area
+    ===========
+    <div>
+     <a href="{% url 'about' %}">About</a>
+     <a href="{% url 'contact' %}">Contact</a>
+    </div>
   </body>
 </html>
 
