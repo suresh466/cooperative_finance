@@ -2,10 +2,13 @@
 
 {% block content %}
 
-<h1>Co-Operative Finance</h1>
+<h2>Co-Operative Finance</h2>
 
 <h3>Site map:</h3>
+<div>
 <ul><a href="{% url 'about' %}">about</a></ul>
 <ul><a href="{% url 'contact' %}">contact</a></ul>
+<ul><a href="{% url 'savings:saving' %}">Savings</a></ul>
+</div>
 
 {% endblock %}

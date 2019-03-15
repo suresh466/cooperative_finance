@@ -3,10 +3,11 @@ from django.urls import path
 from .views import (share_account,share_buy,
         share_sell,share_buy_transactions,
         share_sell_transactions,share_buy_transaction,
-        share_sell_transaction,)
+        share_sell_transaction,share,)
 
 app_name = 'shares'
 urlpatterns = [
+    path('', share, name='share'),
     path('create/', share_account, name='create'),
     path('buy/', share_buy, name='buy'),
     path('sell/', share_sell, name='sell'),
