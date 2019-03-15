@@ -207,3 +207,7 @@ def loan_approve(request):
     }
     return render(request, template, context)
 
+def loan(request):
+    template = 'loans/loans.html'
+
+    return render(request, template)

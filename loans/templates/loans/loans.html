@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>Loanss Account Management</h2>
+
+<h3><a href="{% url 'loans:pay' %}">Pay</a></h3>
+<h3><a href="{% url 'loans:issue' %}">Issue</a></h3>
+<h3><a href="{% url 'loans:approve' %}">Approve</a></h3>
+<h4>Transactions</h4>
+<h3><a href="{% url 'loans:transactions' %}">All Transactions</a></h3>
+<h3><a href="{% url 'loans:transaction' %}">Single account Transactions</a></h3>
+<h3><a href="{% url 'loans:issue_transactions' %}">All Transactions</a></h3>
+<h3><a href="{% url 'loans:issue_transaction' %}">Single account Transactions</a></h3>
+
+{% endblock %}
+
