@@ -157,4 +157,9 @@ def share_sell_transaction(request):
 
     return render(request, template, context)
 
+def share(request):
+    template = 'shares/shares.html'
+
+    return render(request, template)
+
 

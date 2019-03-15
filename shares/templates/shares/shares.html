@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>shares Account Management</h2>
+
+<h3><a href="{% url 'shares:buy' %}">Buy</a></h3>
+<h3><a href="{% url 'shares:sell' %}">Sell</a></h3>
+<h3><a href="{% url 'shares:create' %}">Create</a></h3>
+<h4>Transactions</h4>
+<h3><a href="{% url 'shares:transactions' %}">All shares buy Transactions</a></h3>
+<h3><a href="{% url 'shares:transaction' %}">Single account shares buy Transactions</a></h3>
+<h3><a href="{% url 'shares:sell_transactions' %}">All shares sell Transactions</a></h3>
+<h3><a href="{% url 'shares:sell_transaction' %}">Single shares sell account Transactions</a></h3>
+
+{% endblock %}
+
