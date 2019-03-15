@@ -29,6 +29,6 @@ class SavingWithdrawal(models.Model):
 
 @receiver(post_save, sender=Member)
 def create_account(sender, **kwargs):
-    SavingAccount.objects.create(owner=kwargs['instance'],current_balance=0)
-
+    if kwargs['created']:
+        SavingAccount.objects.create(owner=kwargs['instance'],current_balance=0)
 

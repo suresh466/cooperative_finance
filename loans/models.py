@@ -36,6 +36,7 @@ class LoanPayment(models.Model):
 
 @receiver(post_save, sender=Member)
 def create_account(sender, **kwargs):
-    LoanAccount.objects.create(owner=kwargs['instance'],total_principal=0)
+    if kwargs['created']:
+        LoanAccount.objects.create(owner=kwargs['instance'],total_principal=0)
 
 

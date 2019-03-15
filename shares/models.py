@@ -28,6 +28,7 @@ class ShareSell(models.Model):
 
 @receiver(post_save, sender=Member)
 def create_account(sender, **kwargs):
-    ShareAccount.objects.create(owner=kwargs['instance'],current_share=0)
+    if kwargs['created']:
+        ShareAccount.objects.create(owner=kwargs['instance'],current_share=0)
 
 
