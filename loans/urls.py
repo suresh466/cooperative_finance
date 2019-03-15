@@ -5,7 +5,7 @@ from .views import (loan_issue,loan_payment,
                     loan_issue_transaction,loan_payment_transaction,
                     loan_approve,loan_account)
 
-app_name = 'loan_transaction'
+app_name = 'loans'
 
 urlpatterns = [
     path('create/', loan_account, name='create'),

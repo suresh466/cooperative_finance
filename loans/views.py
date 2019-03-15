@@ -44,7 +44,7 @@ def loan_issue(request):
         messages.success(request,
                          'You have successfully issued Rs. {} only loan to the account number {}.'
                          .format(issue.principal,issue.account.owner.mem_number))
-        return redirect("loan_transaction:issue")
+        return redirect("loans:issue")
     context = {
         'form': form,
         'title': "Issue",
@@ -68,7 +68,7 @@ def loan_payment(request):
         messages.success(request,
                          'you have successfully paid Rs. {} only loan to the account number {}.'
                          .format(payment.principal,payment.loan_num.account.owner.mem_number))
-        return redirect("loan_transaction:pay")
+        return redirect("loans:pay")
 
     context = {
         'form': form,
@@ -170,7 +170,7 @@ def loan_approve(request):
             messages.success(
                 request,
                 'This loan is already approved')
-            return redirect("loan_transaction:approve")
+            return redirect("loans:approve")
 
         loan_num = loan.loan_num.loan_num
         ordered_loan = get_object_or_404(LoanIssue, loan_num = loan_num)
@@ -192,7 +192,7 @@ def loan_approve(request):
                 'You have successfully issued Rs. {} loan to the account number {}.'
                 .format(issue.principal,issue.account.owner.mem_number))
 
-            return redirect("loan_transaction:approve")
+            return redirect("loans:approve")
 
         context = {
             'form': form_two,
