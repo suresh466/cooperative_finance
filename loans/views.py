@@ -59,6 +59,11 @@ def loan_payment(request):
 
     if form.is_valid():
         payment = form.save(commit=False)
+        if not payment.loan_num.status == 'Approved':
+            messages.success(request,
+                    'This loan with loan no. {} is not approved yet.'
+                    .format(payment.loan_num.loan_num,))
+            return redirect("loans:pay")
         #deducts payment principal from the selected loan issue and total principal
         payment.loan_num.principal -= payment.principal
         payment.loan_num.account.total_principal -= payment.principal
@@ -162,7 +167,7 @@ def loan_payment_transaction(request):
 def loan_approve(request):
     template = 'loans/loans_form.html'
 
-    form = LoanIssueForm(request.POST or None)
+    form = GetLoanNumForm(request.POST or None)
 
     if form.is_valid():
         loan = form.save(commit=False)
@@ -177,9 +182,9 @@ def loan_approve(request):
 
         #checks if the post request coming through is from form_two
         if 'confirm' in request.POST:
-            form_two = LoanApproveForm(request.POST, instance=ordered_loan)
+            form_two = LoanIssueForm(request.POST, instance=ordered_loan)
         else:
-            form_two = LoanApproveForm(instance=ordered_loan)
+            form_two = LoanIssueForm(instance=ordered_loan)
 
         if form_two.is_valid():
             issue = form_two.save(commit=False)

@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% for member in members.all %}
+
+<a href="{% url 'members:member_detail' mem_number=member.mem_number %}">{{member}}</a>
+
+{% endfor %}
+
+{% endblock %}
+

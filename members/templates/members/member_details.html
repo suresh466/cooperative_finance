@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h3>Savings AC</h3>
+<p>Name: {{ saving_ac.owner }}</p>
+<p>Amount: {{ saving_ac.current_balance }}</p>
+<br />
+
+<h3>Loans Ac</h3>
+<p>Name: {{loan_ac.owner}}</p>
+<p>Amount: {{ loan_ac.total_principal }}</p>
+<br />
+
+<h3>Shares Ac</h3>
+<p>Name: {{loan_ac.owner}}</p>
+<p>Amount: {{ share_ac.current_share}}</p>
+<br />
+
+
+{% endblock %}
