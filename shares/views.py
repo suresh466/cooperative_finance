@@ -20,51 +20,64 @@ def share_account(request):
     context = {
             'form': form,
             'title': "Create",
-            }
+    }
 
     return render(request, template, context)
 
-def share_buy(request):
+def share_buy(request, **kwargs):
     template = 'shares/shares_form.html'
 
-    form = ShareBuyForm(request.POST or None)
+    if request.method == "post":
+        form = ShareBuyForm(request.POST)
+        if form.is_valid():
+            buy = form.save(commit=False)
+            #adds bought share to current share of shares account
+            buy.account.current_share += buy.number
+            buy.account.save()
+            buy.save()
+            messages.success(request,
+                    'You have successfully added {} share to account number {}.'
+                    .format(buy.number,buy.account.owner.mem_number))
 
-    if form.is_valid():
-        buy = form.save(commit=False)
-        #adds bought share to current share of shares account
-        buy.account.current_share += buy.number
-        buy.account.save()
-        buy.save()
-        messages.success(request,
-                'You have successfully added {} share to account number {}.'
-                .format(buy.number,buy.account.owner.mem_number))
+            return redirect("shares:buy")
 
-        return redirect("shares:buy")
+    else:
+        if 'pk' in kwargs:
+            ac = kwargs['pk']
+            form = ShareBuyForm(initial={'account':ac})
+        else:
+            form = ShareBuyForm()
 
     context = {
             'form': form,
             'title': "Buy",
-            }
+    }
 
     return render(request, template, context)
 
 
-def share_sell(request):
+def share_sell(request, **kwargs):
     template = 'shares/shares_form.html'
 
-    form = ShareSellForm(request.POST or None)
+    if request.method == "POST":
+        if form.is_valid():
+            sell = form.save(commit=False)
+            #deletes sold share from current share of shares account
+            sell.account.current_share -= sell.number
+            sell.account.save()
+            sell.save()
+            messages.success(request,
+                    'You have successfully sold {} share of account number {}.'
+                    .format(sell.number,sell.account.owner.mem_number))
 
-    if form.is_valid():
-        sell = form.save(commit=False)
-        #deletes sold share from current share of shares account
-        sell.account.current_share -= sell.number
-        sell.account.save()
-        sell.save()
-        messages.success(request,
-                'You have successfully sold {} share of account number {}.'
-                .format(sell.number,sell.account.owner.mem_number))
+            return redirect("shares:sell")
 
-        return redirect("shares:sell")
+    else:
+        if 'pk' in kwargs:
+            ac = kwargs['pk']
+            form = ShareSellForm(initial={'account':ac})
+        else:
+            form = ShareSellForm()
 
     context = {
             'form': form,

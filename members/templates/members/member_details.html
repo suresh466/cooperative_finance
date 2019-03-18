@@ -28,6 +28,8 @@
 <h3>Shares Ac</h3>
 <p>Name: {{loan_ac.owner}}</p>
 <p>Amount: {{ share_ac.current_share}}</p>
+<a href="{% url "shares:buypk" pk=share_ac.pk %}">Buy</a>
+<a href="{% url "shares:sellpk" pk=share_ac.pk %}">Sell</a>
 <br />
 
 
