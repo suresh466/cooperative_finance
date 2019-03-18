@@ -27,7 +27,8 @@ def share_account(request):
 def share_buy(request, **kwargs):
     template = 'shares/shares_form.html'
 
-    if request.method == "post":
+    if request.method == "POST":
+        print("***********ok first")
         form = ShareBuyForm(request.POST)
         if form.is_valid():
             buy = form.save(commit=False)
@@ -60,6 +61,7 @@ def share_sell(request, **kwargs):
     template = 'shares/shares_form.html'
 
     if request.method == "POST":
+        form = ShareSellForm(request.POST)
         if form.is_valid():
             sell = form.save(commit=False)
             #deletes sold share from current share of shares account
