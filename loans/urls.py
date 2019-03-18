@@ -18,6 +18,7 @@ urlpatterns = [
     path('issue/get/', get_loan, name='get_loan'),
     path('issue/get/<int:pk>/', get_loan, name='get_loanpk'),
     path('issue/approve/', loan_approve, name='approve'),
+    path('issue/approve/<int:pk>', loan_approve, name='approvepk'),
     path('pay/transactions/', loan_payment_transactions, name='transactions'),
     path('issue/transactions/', loan_issue_transactions, name='issue_transactions'),
     path('pay/transaction/', loan_payment_transaction, name='transaction'),

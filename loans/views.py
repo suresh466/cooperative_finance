@@ -210,10 +210,15 @@ def get_loan(request, **kwargs):
     }
     return render(request, template, context)
 
-def loan_approve(request):
+def loan_approve(request, **kwargs):
     template = 'loans/loans_form.html'
+    
+    if 'pk' in kwargs:
+        loan_num = kwargs['pk']
+    else:
+        loan_num = request.session['loan_num']
 
-    ordered_loan = get_object_or_404(LoanIssue, loan_num = request.session['loan_num'])
+    ordered_loan = get_object_or_404(LoanIssue, loan_num = loan_num)
 
     if request.method == "POST":
         form = LoanIssueForm(request.POST, instance=ordered_loan)
