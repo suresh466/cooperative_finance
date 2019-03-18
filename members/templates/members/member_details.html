@@ -4,6 +4,9 @@
 <h3>Savings AC</h3>
 <p>Name: {{ saving_ac.owner }}</p>
 <p>Amount: {{ saving_ac.current_balance }}</p>
+<a href="{% url "savings:depositpk" pk=saving_ac.pk %}">Deposit</a>
+<br />
+<a href="{% url "savings:withdrawpk" pk=saving_ac.pk %}">Withdraw</a>
 <br />
 
 <h3>Loans Ac</h3>

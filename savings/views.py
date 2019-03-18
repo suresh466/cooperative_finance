@@ -26,21 +26,27 @@ def saving_account(request):
     return render(request, template, context)
 
 
-def saving_deposit(request):
+def saving_deposit(request, **kwargs):
     template = 'savings/savings_form.html'
 
-    form = SavingDepositForm(request.POST or None)
-
-    if form.is_valid():
-        deposit = form.save(commit=False)
-        # adds deposit to the users saving account current balance
-        deposit.account.current_balance += deposit.amount
-        deposit.account.save()
-        deposit.save()
-        messages.success(request,
+    if request.method == 'POST':
+        form = SavingDepositForm(request.POST)
+        if form.is_valid():
+            deposit = form.save(commit=False)
+            # adds deposit to the users saving account current balance
+            deposit.account.current_balance += deposit.amount
+            deposit.account.save()
+            deposit.save()
+            messages.success(request,
                          'You Have successfully Deposited Rs. {} only to the account number {}.'
                          .format(deposit.amount,deposit.account.owner.mem_number))
-        return redirect("savings:deposit")
+            return redirect("savings:deposit")
+    else:
+        if 'pk' in kwargs:
+            ac=kwargs['pk']
+            form = SavingDepositForm(initial={'account':ac})
+        else:
+             form = SavingDepositForm()
 
     context = {
         'form': form,
@@ -49,31 +55,36 @@ def saving_deposit(request):
 
     return render(request, template, context)
 
-def saving_withdrawal(request):
+def saving_withdrawal(request, **kwargs):
     template = 'savings/savings_form.html'
 
-    form = SavingWithdrawalForm(request.POST or None)
+    if request.method == "POST":
+        form = SavingWithdrawalForm(request.POST)
+        if form.is_valid():
+            withdraw = form.save(commit=False)
+            # checks if withdrawal amount is valid
+            if(withdraw.account.current_balance >= withdraw.amount and
+                    withdraw.amount >= 10):
+                withdraw.account.current_balance -= withdraw.amount
+                withdraw.account.save()
+                withdraw.save()
+                messages.success(
+                    request,
+                    'You Have Withdrawn Rs. {} only from the account number {}.'
+                    .format(withdraw.amount,withdraw.account.owner.mem_number))
 
-    if form.is_valid():
-        withdraw = form.save(commit=False)
-
-        # checks if withdrawal amount is valid
-        if(withdraw.account.current_balance >= withdraw.amount and
-           withdraw.amount >= 10):
-            withdraw.account.current_balance -= withdraw.amount
-            withdraw.account.save()
-            withdraw.save()
-            messages.success(
-                request,
-                'You Have Withdrawn Rs. {} only from the account number {}.'
-                .format(withdraw.amount,withdraw.account.owner.mem_number))
-
-            return redirect("savings:withdraw")
+                return redirect("savings:withdraw")
+            else:
+                messages.error(
+                    request,
+                    "Either you are trying to withdraw Rs. less than 10 or your current balance is not sufficient"
+                )
+    else:
+        if 'pk' in kwargs:
+            ac = kwargs['pk']
+            form = SavingWithdrawalForm(initial={'account':ac})
         else:
-            messages.error(
-                request,
-                "Either you are trying to withdraw Rs. less than 10 or your current balance is not sufficient"
-            )
+            form = SavingWithdrawalForm()
 
     context = {
         'form': form,
