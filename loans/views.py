@@ -179,10 +179,15 @@ def loan_payment_transaction(request):
 
     return render(request, template, context)
 
-def get_loan(request):
+def get_loan(request, **kwargs):
     template = 'loans/loans_form.html'
 
-    form = GetLoanNumForm(request.POST or None)
+    if 'pk' in kwargs:
+        loan_ac = kwargs['pk']
+        form = GetLoanNumForm(request.POST or None)
+        form.fields["loan_num"].queryset = LoanIssue.objects.filter(account=loan_ac)
+    else:
+        form = GetLoanNumForm(request.POST or None)
 
     if form.is_valid():
         loan = form.save(commit=False)
@@ -190,7 +195,10 @@ def get_loan(request):
             messages.success(
                 request,
                 'This loan is already approved')
-            return redirect("loans:approve")
+            if 'pk' in kwargs:
+                return redirect("loans:get_loanpk", pk=kwargs['pk'])
+            else:
+                return redirect("loans:get_loan")
 
         loan_num = loan.loan_num.loan_num
         request.session['loan_num']=loan_num
@@ -204,7 +212,6 @@ def get_loan(request):
 
 def loan_approve(request):
     template = 'loans/loans_form.html'
-    print(request.session['loan_num'])
 
     ordered_loan = get_object_or_404(LoanIssue, loan_num = request.session['loan_num'])
 

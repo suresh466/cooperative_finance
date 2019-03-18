@@ -14,7 +14,7 @@
 <p>Amount: {{ loan_ac.total_principal }}</p>
 <a href="{% url "loans:issuepk" pk=loan_ac.pk %}">Issue</a>
 <a href="{% url "loans:paypk" pk=loan_ac.pk %}">Pay</a>
-<br />
+<a href="{% url "loans:get_loanpk" pk=loan_ac.pk %}">Approve</a>
 <br />
 
 <h3>Shares Ac</h3>
