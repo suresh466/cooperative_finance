@@ -29,22 +29,29 @@ def loan_account(request):
     return render(request, template, context)
 
 
-def loan_issue(request):
+def loan_issue(request, **kwargs):
     template = 'loans/loans_form.html'
-
-    form = LoanIssueForm(request.POST or None)
-
-    if form.is_valid():
-        issue = form.save(commit=False)
-        if issue.status == 'Approved':
+    
+    if request.method == "POST":
+        form = LoanIssueForm(request.POST)
+        if form.is_valid():
+            issue = form.save(commit=False)
+            if issue.status == 'Approved':
             #adds issued principal to the users account total principal
-            issue.account.total_principal += issue.principal
-            issue.account.save()
-        issue.save()
-        messages.success(request,
-                         'You have successfully issued Rs. {} only loan to the account number {}.'
-                         .format(issue.principal,issue.account.owner.mem_number))
-        return redirect("loans:issue")
+                issue.account.total_principal += issue.principal
+                issue.account.save()
+            issue.save()
+            messages.success(request,
+                        'You have successfully issued Rs. {} only loan to the account number {}.'
+                        .format(issue.principal,issue.account.owner.mem_number))
+            return redirect("loans:issue")
+    else:
+        if 'pk' in kwargs:
+            ac = kwargs['pk']
+            form = LoanIssueForm(initial={'account':ac})
+        else:
+            form = LoanIssueForm()
+
     context = {
         'form': form,
         'title': "Issue",
@@ -52,28 +59,36 @@ def loan_issue(request):
 
     return render(request, template, context)
 
-def loan_payment(request):
+def loan_payment(request, **kwargs):
     template = 'loans/loans_form.html'
-
-    form = LoanPaymentForm(request.POST or None)
-
-    if form.is_valid():
-        payment = form.save(commit=False)
-        if not payment.loan_num.status == 'Approved':
-            messages.success(request,
-                    'This loan with loan no. {} is not approved yet.'
-                    .format(payment.loan_num.loan_num,))
-            return redirect("loans:pay")
+    
+    if request.method == "POST":
+        form = LoanPaymentForm(request.POST)
+        if form.is_valid():
+            payment = form.save(commit=False)
+            if not payment.loan_num.status == 'Approved':
+                messages.success(request,
+                        'This loan with loan no. {} is not approved yet.'
+                        .format(payment.loan_num.loan_num,))
+                return redirect("loans:pay")
         #deducts payment principal from the selected loan issue and total principal
-        payment.loan_num.principal -= payment.principal
-        payment.loan_num.account.total_principal -= payment.principal
-        payment.loan_num.account.save()
-        payment.loan_num.save()
-        payment.save()
-        messages.success(request,
-                         'you have successfully paid Rs. {} only loan to the account number {}.'
-                         .format(payment.principal,payment.loan_num.account.owner.mem_number))
-        return redirect("loans:pay")
+            payment.loan_num.principal -= payment.principal
+            payment.loan_num.account.total_principal -= payment.principal
+            payment.loan_num.account.save()
+            payment.loan_num.save()
+            payment.save()
+            messages.success(request,
+                            'you have successfully paid Rs. {} only loan to the account number {}.'
+                            .format(payment.principal,payment.loan_num.account.owner.mem_number))
+            return redirect("loans:pay")
+
+    else:
+        if 'pk' in kwargs:
+            loan_ac = kwargs['pk']
+            form = LoanPaymentForm()
+            form.fields["loan_num"].queryset = LoanIssue.objects.filter(account=loan_ac)
+        else:
+            form = LoanPaymentForm()
 
     context = {
         'form': form,

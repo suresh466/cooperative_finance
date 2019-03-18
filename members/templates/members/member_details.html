@@ -12,6 +12,9 @@
 <h3>Loans Ac</h3>
 <p>Name: {{loan_ac.owner}}</p>
 <p>Amount: {{ loan_ac.total_principal }}</p>
+<a href="{% url "loans:issuepk" pk=loan_ac.pk %}">Issue</a>
+<a href="{% url "loans:paypk" pk=loan_ac.pk %}">Pay</a>
+<br />
 <br />
 
 <h3>Shares Ac</h3>
