@@ -1,11 +1,12 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.db.models import Sum
 
 from .forms import (SavingDepositForm,SavingWithdrawalForm,
         GetSavingAccountForm,SavingAccountForm,)
                     
-from .models import (SavingDeposit,SavingWithdrawal,)
+from .models import (SavingDeposit,SavingWithdrawal,
+        SavingAccount,)
 
 # Create your views here.
 
@@ -44,13 +45,14 @@ def saving_deposit(request, **kwargs):
     else:
         if 'pk' in kwargs:
             ac=kwargs['pk']
-            form = SavingDepositForm(initial={'account':ac})
+            form = SavingDepositForm()
+            form.fields["account"].queryset = SavingAccount.objects.filter(id=ac)
+            form.fields["account"].initial = ac
         else:
              form = SavingDepositForm()
-
     context = {
-        'form': form,
-        'title': "Deposit"
+            'form': form,
+            'title': "Deposit"
     }
 
     return render(request, template, context)
@@ -82,7 +84,9 @@ def saving_withdrawal(request, **kwargs):
     else:
         if 'pk' in kwargs:
             ac = kwargs['pk']
-            form = SavingWithdrawalForm(initial={'account':ac})
+            form = SavingWithdrawalForm()
+            form.fields["account"].queryset = SavingAccount.objects.filter(id=ac)
+            form.fields["account"].initial = ac
         else:
             form = SavingWithdrawalForm()
 
