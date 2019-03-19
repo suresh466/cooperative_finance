@@ -214,8 +214,8 @@ def get_loan(request, **kwargs):
 def loan_approve(request, **kwargs):
     template = 'loans/loans_form.html'
     
-    if 'pk' in kwargs:
-        loan_num = kwargs['pk']
+    if 'loan_num' in kwargs:
+        loan_num = kwargs['loan_num']
     else:
         loan_num = request.session['loan_num']
 

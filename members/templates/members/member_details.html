@@ -32,7 +32,7 @@
 <a href="{% url "loans:get_loanpk" pk=loan_ac.pk %}">Approve</a>
 <br />
 {% for loan in pending_loan %}
-<p>{{loan}} : {{loan.status}} : <a href="{% url 'loans:approvepk' pk=loan.loan_num %}">{{ loan.loan_num }}</a></p>
+<p>{{loan}} : {{loan.status}} : <a href="{% url 'loans:approveloan_num' loan_num=loan.loan_num %}">{{ loan.loan_num }}</a></p>
 {% endfor %}
 <h3> Loan Issue Transactions:</h3>
 {% for transaction in issue_transactions %}
@@ -43,9 +43,8 @@
 <p>{{ transaction }} : {{ transaction.principal}}</p>
 {% endfor %}
 <br />
-
 {% for loan in approved_loan %}
-<p>{{loan}} : {{loan.status}} : <a href="{% url 'loans:approvepk' pk=loan.loan_num %}">{{ loan.loan_num }}</a></p>
+<p>{{loan}} : {{loan.status}} : <a href="{% url 'loans:approveloan_num' loan_num=loan.loan_num %}">{{ loan.loan_num }}</a></p>
 {% endfor %}
 
 <h3>Shares Ac</h3>
