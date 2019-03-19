@@ -5,6 +5,7 @@ from django.db.models import Sum
 
 from .forms import (LoanIssueForm,LoanPaymentForm,
        GetLoanNumForm,LoanAccountForm) 
+from .models import LoanAccount
                     
                     
                     
@@ -48,7 +49,9 @@ def loan_issue(request, **kwargs):
     else:
         if 'pk' in kwargs:
             ac = kwargs['pk']
-            form = LoanIssueForm(initial={'account':ac})
+            form = LoanIssueForm()
+            form.fields["account"].queryset = LoanAccount.objects.filter(id=ac)
+            form.fields["account"].initial = ac
         else:
             form = LoanIssueForm()
 
