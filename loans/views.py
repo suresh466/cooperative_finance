@@ -86,7 +86,7 @@ def loan_payment(request, **kwargs):
         if 'pk' in kwargs:
             loan_ac = kwargs['pk']
             form = LoanPaymentForm()
-            form.fields["loan_num"].queryset = LoanIssue.objects.filter(account=loan_ac)
+            form.fields["loan_num"].queryset = LoanIssue.objects.filter(account=loan_ac, status="Approved")
         else:
             form = LoanPaymentForm()
 
@@ -185,9 +185,10 @@ def get_loan(request, **kwargs):
     if 'pk' in kwargs:
         loan_ac = kwargs['pk']
         form = GetLoanNumForm(request.POST or None)
-        form.fields["loan_num"].queryset = LoanIssue.objects.filter(account=loan_ac)
+        form.fields["loan_num"].queryset = LoanIssue.objects.filter(account=loan_ac, status="Pending")
     else:
         form = GetLoanNumForm(request.POST or None)
+        form.fields["loan_num"].queryset = LoanIssue.objects.filter(status="Pending")
 
     if form.is_valid():
         loan = form.save(commit=False)
