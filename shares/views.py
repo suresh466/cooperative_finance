@@ -5,7 +5,8 @@ from django.db.models import Sum
 from .forms import (ShareAccountForm,ShareBuyForm,
         ShareSellForm,GetShareAccountForm)
 
-from .models import (ShareBuy,ShareSell,)
+from .models import (ShareBuy,ShareSell,
+        ShareAccount,)
 # Create your views here.
 
 def share_account(request):
@@ -45,7 +46,9 @@ def share_buy(request, **kwargs):
     else:
         if 'pk' in kwargs:
             ac = kwargs['pk']
-            form = ShareBuyForm(initial={'account':ac})
+            form = ShareBuyForm()
+            form.fields["account"].queryset = ShareAccount.objects.filter(id=ac)
+            form.fields["account"].initial = ac
         else:
             form = ShareBuyForm()
 
@@ -77,7 +80,9 @@ def share_sell(request, **kwargs):
     else:
         if 'pk' in kwargs:
             ac = kwargs['pk']
-            form = ShareSellForm(initial={'account':ac})
+            form = ShareSellForm()
+            form.fields["account"].queryset = ShareAccount.objects.filter(id=ac)
+            form.fields["account"].initial = ac
         else:
             form = ShareSellForm()
 
