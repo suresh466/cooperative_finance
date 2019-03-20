@@ -2,6 +2,7 @@ from django.shortcuts import (render, redirect,
         get_object_or_404)
 from django.contrib import messages
 from django.db.models import Sum
+from django import forms
 
 from .forms import (LoanIssueForm,LoanPaymentForm,
        GetLoanNumForm,LoanAccountForm) 
@@ -45,6 +46,8 @@ def loan_issue(request, **kwargs):
             messages.success(request,
                         'You have successfully issued Rs. {} only loan to the account number {}.'
                         .format(issue.principal,issue.account.owner.mem_number))
+            if 'pk' in kwargs:
+                return redirect("loans:issuepk", pk=kwargs['pk'])
             return redirect("loans:issue")
     else:
         if 'pk' in kwargs:
@@ -52,6 +55,7 @@ def loan_issue(request, **kwargs):
             form = LoanIssueForm()
             form.fields["account"].queryset = LoanAccount.objects.filter(id=ac)
             form.fields["account"].initial = ac
+            form.fields["account"].widget = forms.HiddenInput()
         else:
             form = LoanIssueForm()
 
@@ -83,6 +87,9 @@ def loan_payment(request, **kwargs):
             messages.success(request,
                             'you have successfully paid Rs. {} only loan to the account number {}.'
                             .format(payment.principal,payment.loan_num.account.owner.mem_number))
+            
+            if 'pk' in kwargs:
+                return redirect("loans:paypk", pk=kwargs['pk'])
             return redirect("loans:pay")
 
     else:
@@ -238,7 +245,12 @@ def loan_approve(request, **kwargs):
         messages.success(
                 request,
                 'You have issued')
-        del request.session['loan_num']
+        #if request.session:
+            #del request.session['loan_num']
+        if 'loan_num' in kwargs:
+            issue_instance=get_object_or_404(LoanIssue, loan_num=kwargs['loan_num'])
+            mem_number=issue_instance.account.owner.mem_number
+            return redirect("members:member_detail", mem_number=mem_number)
         return redirect("loans:get_loan")
 
     context = {

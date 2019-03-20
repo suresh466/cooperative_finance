@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.db.models import Sum
+from django import forms
 
 from .forms import (SavingDepositForm,SavingWithdrawalForm,
         GetSavingAccountForm,SavingAccountForm,)
@@ -41,6 +42,8 @@ def saving_deposit(request, **kwargs):
             messages.success(request,
                          'You Have successfully Deposited Rs. {} only to the account number {}.'
                          .format(deposit.amount,deposit.account.owner.mem_number))
+            if 'pk' in kwargs:
+                return redirect("savings:depositpk", pk=kwargs['pk'])
             return redirect("savings:deposit")
     else:
         if 'pk' in kwargs:
@@ -48,6 +51,7 @@ def saving_deposit(request, **kwargs):
             form = SavingDepositForm()
             form.fields["account"].queryset = SavingAccount.objects.filter(id=ac)
             form.fields["account"].initial = ac
+            form.fields["account"].widget = forms.HiddenInput() 
         else:
              form = SavingDepositForm()
     context = {
@@ -75,6 +79,8 @@ def saving_withdrawal(request, **kwargs):
                     'You Have Withdrawn Rs. {} only from the account number {}.'
                     .format(withdraw.amount,withdraw.account.owner.mem_number))
 
+                if 'pk' in kwargs:
+                    return redirect("savings:withdrawpk", pk=kwargs['pk'])
                 return redirect("savings:withdraw")
             else:
                 messages.error(
@@ -87,6 +93,7 @@ def saving_withdrawal(request, **kwargs):
             form = SavingWithdrawalForm()
             form.fields["account"].queryset = SavingAccount.objects.filter(id=ac)
             form.fields["account"].initial = ac
+            form.fields["account"].widget = forms.HiddenInput() 
         else:
             form = SavingWithdrawalForm()
 

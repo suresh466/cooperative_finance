@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.db.models import Sum
-
+from django import forms
 from .forms import (ShareAccountForm,ShareBuyForm,
         ShareSellForm,GetShareAccountForm)
 
@@ -41,6 +41,8 @@ def share_buy(request, **kwargs):
                     'You have successfully added {} share to account number {}.'
                     .format(buy.number,buy.account.owner.mem_number))
 
+            if 'pk' in kwargs:
+                return redirect("shares:buypk", pk=kwargs['pk'])
             return redirect("shares:buy")
 
     else:
@@ -49,6 +51,7 @@ def share_buy(request, **kwargs):
             form = ShareBuyForm()
             form.fields["account"].queryset = ShareAccount.objects.filter(id=ac)
             form.fields["account"].initial = ac
+            form.fields["account"].widget = forms.HiddenInput()
         else:
             form = ShareBuyForm()
 
@@ -75,6 +78,8 @@ def share_sell(request, **kwargs):
                     'You have successfully sold {} share of account number {}.'
                     .format(sell.number,sell.account.owner.mem_number))
 
+            if 'pk' in kwargs:
+                return redirect("shares:sellpk", pk=kwargs['pk'])
             return redirect("shares:sell")
 
     else:
@@ -83,6 +88,7 @@ def share_sell(request, **kwargs):
             form = ShareSellForm()
             form.fields["account"].queryset = ShareAccount.objects.filter(id=ac)
             form.fields["account"].initial = ac
+            form.fields["account"].widget = forms.HiddenInput()
         else:
             form = ShareSellForm()
 
