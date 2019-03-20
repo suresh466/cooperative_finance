@@ -4,16 +4,62 @@
 <h3>Savings AC</h3>
 <p>Name: {{ saving_ac.owner }}</p>
 <p>Amount: {{ saving_ac.current_balance }}</p>
+<a href="{% url "savings:depositpk" pk=saving_ac.pk %}">Deposit</a>
+<br />
+<a href="{% url "savings:withdrawpk" pk=saving_ac.pk %}">Withdraw</a>
+<h3>Deposit Transactions:</h3>
+{% for transaction in deposit_transactions %}
+
+{{ transaction }}
+{{ transaction.amount }}
+
+{% endfor %}
+
+<h3>Withdrawal Transactions:</h3>
+{% for transaction in withdrawal_transactions %}
+
+<p>{{ transaction }} : {{ transaction.amount }}</p>
+
+{% endfor %}
+
 <br />
 
 <h3>Loans Ac</h3>
 <p>Name: {{loan_ac.owner}}</p>
 <p>Amount: {{ loan_ac.total_principal }}</p>
+<a href="{% url "loans:issuepk" pk=loan_ac.pk %}">Issue</a>
+<a href="{% url "loans:paypk" pk=loan_ac.pk %}">Pay</a>
+<a href="{% url "loans:get_loanpk" pk=loan_ac.pk %}">Approve</a>
 <br />
+{% for loan in pending_loan %}
+<p>{{loan}} : {{loan.status}} : <a href="{% url 'loans:approveloan_num' loan_num=loan.loan_num %}">{{ loan.loan_num }}</a></p>
+{% endfor %}
+<h3> Loan Issue Transactions:</h3>
+{% for transaction in issue_transactions %}
+<p>{{ transaction }} : {{ transaction.principal}}</p>
+{% endfor %}
+<h3> Loan payment Transactions:</h3>
+{% for transaction in payment_transactions %}
+<p>{{ transaction }} : {{ transaction.principal}}</p>
+{% endfor %}
+<br />
+{% for loan in approved_loan %}
+<p>{{loan}} : {{loan.status}} : <a href="{% url 'loans:approveloan_num' loan_num=loan.loan_num %}">{{ loan.loan_num }}</a></p>
+{% endfor %}
 
 <h3>Shares Ac</h3>
 <p>Name: {{loan_ac.owner}}</p>
 <p>Amount: {{ share_ac.current_share}}</p>
+<a href="{% url "shares:buypk" pk=share_ac.pk %}">Buy</a>
+<a href="{% url "shares:sellpk" pk=share_ac.pk %}">Sell</a>
+<h3>Share sell transactions:</h3>
+{% for transaction in sell_transactions %}
+<p>{{transaction}} : {{transaction.number}}</p>
+{% endfor %}
+<h3>Share buy transactions:</h3>
+{% for transaction in sell_transactions %}
+<p>{{transaction}} : {{transaction.number}}</p>
+{% endfor %}
 <br />
 
 

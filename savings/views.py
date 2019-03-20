@@ -1,11 +1,13 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.db.models import Sum
+from django import forms
 
 from .forms import (SavingDepositForm,SavingWithdrawalForm,
         GetSavingAccountForm,SavingAccountForm,)
                     
-from .models import (SavingDeposit,SavingWithdrawal,)
+from .models import (SavingDeposit,SavingWithdrawal,
+        SavingAccount,)
 
 # Create your views here.
 
@@ -26,54 +28,74 @@ def saving_account(request):
     return render(request, template, context)
 
 
-def saving_deposit(request):
+def saving_deposit(request, **kwargs):
     template = 'savings/savings_form.html'
 
-    form = SavingDepositForm(request.POST or None)
-
-    if form.is_valid():
-        deposit = form.save(commit=False)
-        # adds deposit to the users saving account current balance
-        deposit.account.current_balance += deposit.amount
-        deposit.account.save()
-        deposit.save()
-        messages.success(request,
+    if request.method == 'POST':
+        form = SavingDepositForm(request.POST)
+        if form.is_valid():
+            deposit = form.save(commit=False)
+            # adds deposit to the users saving account current balance
+            deposit.account.current_balance += deposit.amount
+            deposit.account.save()
+            deposit.save()
+            messages.success(request,
                          'You Have successfully Deposited Rs. {} only to the account number {}.'
                          .format(deposit.amount,deposit.account.owner.mem_number))
-        return redirect("savings:deposit")
-
+            if 'pk' in kwargs:
+                return redirect("savings:depositpk", pk=kwargs['pk'])
+            return redirect("savings:deposit")
+    else:
+        if 'pk' in kwargs:
+            ac=kwargs['pk']
+            form = SavingDepositForm()
+            form.fields["account"].queryset = SavingAccount.objects.filter(id=ac)
+            form.fields["account"].initial = ac
+            form.fields["account"].widget = forms.HiddenInput() 
+        else:
+             form = SavingDepositForm()
     context = {
-        'form': form,
-        'title': "Deposit"
+            'form': form,
+            'title': "Deposit"
     }
 
     return render(request, template, context)
 
-def saving_withdrawal(request):
+def saving_withdrawal(request, **kwargs):
     template = 'savings/savings_form.html'
 
-    form = SavingWithdrawalForm(request.POST or None)
+    if request.method == "POST":
+        form = SavingWithdrawalForm(request.POST)
+        if form.is_valid():
+            withdraw = form.save(commit=False)
+            # checks if withdrawal amount is valid
+            if(withdraw.account.current_balance >= withdraw.amount and
+                    withdraw.amount >= 10):
+                withdraw.account.current_balance -= withdraw.amount
+                withdraw.account.save()
+                withdraw.save()
+                messages.success(
+                    request,
+                    'You Have Withdrawn Rs. {} only from the account number {}.'
+                    .format(withdraw.amount,withdraw.account.owner.mem_number))
 
-    if form.is_valid():
-        withdraw = form.save(commit=False)
-
-        # checks if withdrawal amount is valid
-        if(withdraw.account.current_balance >= withdraw.amount and
-           withdraw.amount >= 10):
-            withdraw.account.current_balance -= withdraw.amount
-            withdraw.account.save()
-            withdraw.save()
-            messages.success(
-                request,
-                'You Have Withdrawn Rs. {} only from the account number {}.'
-                .format(withdraw.amount,withdraw.account.owner.mem_number))
-
-            return redirect("savings:withdraw")
+                if 'pk' in kwargs:
+                    return redirect("savings:withdrawpk", pk=kwargs['pk'])
+                return redirect("savings:withdraw")
+            else:
+                messages.error(
+                    request,
+                    "Either you are trying to withdraw Rs. less than 10 or your current balance is not sufficient"
+                )
+    else:
+        if 'pk' in kwargs:
+            ac = kwargs['pk']
+            form = SavingWithdrawalForm()
+            form.fields["account"].queryset = SavingAccount.objects.filter(id=ac)
+            form.fields["account"].initial = ac
+            form.fields["account"].widget = forms.HiddenInput() 
         else:
-            messages.error(
-                request,
-                "Either you are trying to withdraw Rs. less than 10 or your current balance is not sufficient"
-            )
+            form = SavingWithdrawalForm()
 
     context = {
         'form': form,
