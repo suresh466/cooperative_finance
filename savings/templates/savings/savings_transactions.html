@@ -33,7 +33,7 @@
     <tr>
     {% for transaction in transactions.all %}
 
-    <th scope="row">{{forloop.counter}}</th>
+    <th scope="row">{{forloop.counter}}<a href="{% url 'savings:deposit_delete' pk=transaction.id %}?previous={{request.path}}">del</a></th>
     <td>{{ transaction.account }}</td>
     <td>{{title}}</td>
     <td>{{ transaction.amount }}</td>

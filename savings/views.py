@@ -190,3 +190,26 @@ def saving(request):
     template = 'savings/savings.html'
 
     return render(request, template)
+
+def saving_deposit_delete(request, pk):
+    template = 'savings/savings_delete.html'
+
+    deposit = get_object_or_404(SavingDeposit, pk=pk)
+
+    if request.method == "POST":
+        deposit.account.current_balance -= deposit.amount
+        deposit.account.save()
+        deposit.delete()
+        messages.success(request,
+                        'You successfully deleted saving_deposit of account {} and amount {}.'
+                        .format(deposit.account,deposit.amount))
+        previous = request.POST.get('previous', None)
+
+        return redirect(previous)
+
+    context = {
+        'item': deposit,
+        'type': "deposit",
+    }
+
+    return render(request, template, context)
