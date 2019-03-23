@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if items %}
+<p>{{title}} Report</p>
+{% for item in items %}
+<p>{{item.payed_to}}
+<p>{{ item.amount }}||</p>
+{% endfor %}
+
+{% else %}
+<p>No expenses in this period</p>
+{% endif %}
+
+{% endblock %}
+
