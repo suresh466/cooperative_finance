@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h3>{{title}}</h3>
+
+<form method='POST'>
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Submit</button>
+</form>
+
+{% if transactions %}
+
+{% for transaction in transactions %}
+
+<p>{{ transaction.amount }}</p>
+<p>{{ transaction.income_type }}</p>
+<p>{{ transaction.expense_type }}</p>
+
+{% endfor %}
+
+{% endif %}
+
+{% endblock %}
