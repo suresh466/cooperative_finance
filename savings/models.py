@@ -33,6 +33,14 @@ class SavingWithdrawal(models.Model):
     def __str__(self):
         return self.account.owner.first_name
 
+class SavingDelete(models.Model):
+    tran_type = models.CharField(max_length=10)
+    amount = models.PositiveIntegerField()
+    account = models.CharField(max_length=256)
+
+    def __str__(self):
+        return self.account
+
 @receiver(post_save, sender=Member)
 def create_account(sender, **kwargs):
     if kwargs['created']:
