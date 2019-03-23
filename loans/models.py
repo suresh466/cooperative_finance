@@ -10,10 +10,16 @@ STATUS_CHOICE = (
     ('Approved', 'Approved'),
     )
 
+ACCOUNT_STATUS_CHOICE = (
+       	    ('Deactivated', 'Deactivated'),
+            ('Activated', 'Activated'),
+            )
+
 
 class LoanAccount(models.Model):
     owner = models.OneToOneField(Member, on_delete=models.CASCADE)
     total_principal = models.PositiveIntegerField()
+    status = models.CharField(choices=ACCOUNT_STATUS_CHOICE, default='Deactivated', max_length=11)
 
     def __str__(self):
         return self.owner.first_name
