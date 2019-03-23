@@ -1,4 +1,5 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
+from .forms import MemberCreateForm
 from .models import Member
 from savings.models import (SavingAccount, SavingDeposit,
         SavingWithdrawal,)
@@ -8,6 +9,23 @@ from shares.models import (ShareAccount,ShareSell,
         ShareBuy,)
 
 # Create your views here.
+
+def member_create(request):
+    template = 'members/form.html'
+
+    form = MemberCreateForm(request.POST or None)
+    
+    if form.is_valid():
+        form.save()
+        return redirect('members:member')
+
+    context = {
+            'form': form,
+            'title': "Create",
+            }
+
+    return render(request, template, context)
+
 
 def member(request):
     template = 'members/members.html'
@@ -52,3 +70,4 @@ def member_detail(request, mem_number):
     }
 
     return render(request, template, context)
+

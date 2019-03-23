@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'loans',
     'shares',
     'reports',
+    'accounting',
 ]
 
 MIDDLEWARE = [
