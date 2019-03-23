@@ -10,6 +10,16 @@
   <button type="submit">Submit</button>
 </form>
 
+{% if transactions %}
 
+{% for transaction in transactions %}
+
+<p>{{ transaction.amount }}</p>
+<p>{{ transaction.income_type }}</p>
+<p>{{ transaction.expense_type }}</p>
+
+{% endfor %}
+
+{% endif %}
 
 {% endblock %}

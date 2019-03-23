@@ -1,9 +1,12 @@
 from django.shortcuts import render
 from .forms import IncomeForm,ExpenseForm
+from .models import Income,Expense
 # Create your views here.
 
 def income(request):
     template = 'accounting/form.html'
+
+    transactions = Income.objects.all()
 
     form = IncomeForm(request.POST or None)
 
@@ -14,12 +17,15 @@ def income(request):
     context = {
             'form': form,
             'title': 'Income',
+            'transactions': transactions,
             }
 
     return render (request, template, context)
 
 def expense(request):
     template = 'accounting/form.html'
+    
+    transactions = Expense.objects.all()
 
     form = ExpenseForm(request.POST or None)
 
@@ -30,6 +36,7 @@ def expense(request):
     context = {
             'form': form,
             'title': "Expense",
+            'transactions': transactions,
             }
     
     return render (request, template, context)
