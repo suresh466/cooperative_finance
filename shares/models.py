@@ -5,9 +5,15 @@ from django.db.models.signals import post_save
 
 # Create your models here.
 
+ACCOUNT_STATUS_CHOICE = (
+       	    ('Deactivated', 'Deactivated'),
+            ('Activated', 'Activated'),
+            )
+
 class ShareAccount(models.Model):
     owner = models.OneToOneField(Member, on_delete=models.CASCADE)
     current_share = models.PositiveIntegerField()
+    status = models.CharField(choices=ACCOUNT_STATUS_CHOICE, default='Deactivated', max_length=11)
 
     def __str__(self):
         return self.owner.first_name

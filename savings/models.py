@@ -6,9 +6,15 @@ from django.db.models.signals import post_save
 
 # Create your models here.
 
+ACCOUNT_STATUS_CHOICE = (
+            ('Deactivated', 'Deactivated'),
+            ('Activated', 'Activated'),
+            )
+
 class SavingAccount(models.Model):
     owner = models.OneToOneField(Member, on_delete=models.CASCADE)
     current_balance = models.PositiveIntegerField()
+    status = models.CharField(choices=ACCOUNT_STATUS_CHOICE, default='Deactivated', max_length=11)
 
     def __str__(self):
         return self.owner.first_name
