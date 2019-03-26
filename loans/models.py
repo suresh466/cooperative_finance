@@ -40,6 +40,15 @@ class LoanPayment(models.Model):
     def __str__(self):
         return self.loan_num.account.owner.first_name
 
+class LoanDelete(models.Model):
+    tran_type = models.CharField(max_length=10)
+    principal = models.PositiveIntegerField()
+    loan_num = models.CharField(max_length=256)
+    account = models.CharField(max_length=256)
+
+    def __str__(self):
+        return self.account
+
 @receiver(post_save, sender=Member)
 def create_account(sender, **kwargs):
     if kwargs['created']:
