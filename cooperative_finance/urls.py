@@ -27,4 +27,5 @@ urlpatterns = [
     path('shares/', include('shares.urls')),
     path('members/', include('members.urls')),
     path('accounting/', include('accounting.urls')),
+    path('search/', include('search.urls')),
 ]
