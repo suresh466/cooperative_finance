@@ -34,9 +34,9 @@
     {% for transaction in transactions.all %}
 
     <th scope="row">{{forloop.counter}}<a href="{% if title == "Deposit"  %}
-		    {% url 'savings:deposit_delete' pk=transaction.id %}
+		    {% url 'savings:deposit_delete' pk=transaction.id %}?previous={{request.path}}
 		    {% else %}
-		    {% url 'savings:withdraw_delete' pk=transaction.id %}{% endif %}?previous={{request.path}}">del</a></th>
+		    {% url 'savings:withdraw_delete' pk=transaction.id %}?previous={{request.path}}{% endif %}">del</a></th>
     <td>{{ transaction.account }}</td>
     <td>{{title}}</td>
     <td>{{ transaction.amount }}</td>
