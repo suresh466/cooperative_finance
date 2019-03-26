@@ -7,7 +7,7 @@ from .forms import (SavingDepositForm,SavingWithdrawalForm,
         GetSavingAccountForm,SavingAccountForm,)
                     
 from .models import (SavingDeposit,SavingWithdrawal,
-        SavingAccount,)
+                    SavingAccount,SavingDelete)
 
 # Create your views here.
 
@@ -190,3 +190,53 @@ def saving(request):
     template = 'savings/savings.html'
 
     return render(request, template)
+
+def saving_deposit_delete(request, pk):
+    template = 'savings/savings_delete.html'
+
+    deposit = get_object_or_404(SavingDeposit, pk=pk)
+
+    if request.method == "POST":
+        deleted = SavingDelete.objects.create(tran_type="deposit",amount=deposit.amount,
+                                             account=deposit.account.owner.first_name)
+        deposit.account.current_balance -= deposit.amount
+        deposit.account.save()
+        deposit.delete()
+        messages.success(request,
+                        'You successfully deleted saving_deposit of account {} and amount {}.'
+                        .format(deposit.account,deposit.amount))
+        previous = request.POST.get('previous', None)
+
+        return redirect(previous)
+
+    context = {
+        'item': deposit,
+        'type': "deposit",
+    }
+
+    return render(request, template, context)
+
+def saving_withdrawal_delete(request, pk):
+    template = 'savings/savings_delete.html'
+
+    withdrawal = get_object_or_404(SavingWithdrawal, pk=pk)
+
+    if request.method == "POST":
+        deleted = SavingDelete.objects.create(tran_type="withdrawal",amount=withdrawal.amount,
+                                             account=withdrawal.account.owner.first_name)
+        withdrawal.account.current_balance += withdrawal.amount
+        withdrawal.account.save()
+        withdrawal.delete()
+        messages.success(request,
+                        'You successfully deleted saving_withdrawal of account {} and amount {}.'
+                        .format(withdrawal.account,withdrawal.amount))
+        previous = request.POST.get('previous', None)
+
+        return redirect(previous)
+
+    context = {
+        'item': withdrawal,
+        'type': "deposit",
+    }
+
+    return render(request, template, context)

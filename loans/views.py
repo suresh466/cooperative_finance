@@ -6,7 +6,7 @@ from django import forms
 
 from .forms import (LoanIssueForm,LoanPaymentForm,
        GetLoanNumForm,LoanAccountForm) 
-from .models import LoanAccount
+from .models import LoanAccount, LoanDelete
                     
                     
                     
@@ -264,3 +264,56 @@ def loan(request):
     template = 'loans/loans.html'
 
     return render(request, template)
+
+def loan_issue_delete(request, pk):
+    template = 'loans/loans_delete.html'
+
+    issue = get_object_or_404(LoanIssue, pk=pk)
+
+    if request.method == "POST":
+        deleted = LoanDelete.objects.create(tran_type="issue",principal=issue.principal,
+                                             account=issue.account.owner.first_name,
+                                             loan_num = issue.loan_num)
+        issue.account.total_principal -= issue.principal
+        issue.account.save()
+        issue.delete()
+        messages.success(request,
+                        'You successfully deleted loans_issue of account {}, principal {} and loan no. {}.'
+                        .format(issue.account,issue.principal,issue.loan_num))
+        previous = request.POST.get('previous', None)
+
+        return redirect(previous)
+
+    context = {
+        'item': issue,
+        'type': "issue",
+    }
+
+    return render(request, template, context)
+
+def loan_payment_delete(request, pk):
+    template = 'loans/loans_delete.html'
+
+    payment = get_object_or_404(LoanPayment, pk=pk)
+
+    if request.method == "POST":
+        deleted = LoanDelete.objects.create(tran_type="payment",principal=payment.principal,
+                                             loan_num = payment.loan_num)
+        payment.loan_num.account.total_principal += payment.principal
+        payment.loan_num.account.save()
+        payment.delete()
+        messages.success(request,
+                        'You successfully deleted loans_payment of principal {} and loan no. {}.'
+                        .format(payment.principal,payment.loan_num))
+        previous = request.POST.get('previous', None)
+
+        return redirect(previous)
+
+    context = {
+        'item': payment,
+        'type': "payment",
+    }
+
+    return render(request, template, context)
+
+
