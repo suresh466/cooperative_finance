@@ -110,7 +110,7 @@ def loan_payment(request, **kwargs):
 def loan_issue_transactions(request):
     template = 'loans/loans_transactions.html'
 
-    loans = LoanIssue.objects
+    loans = LoanIssue.objects.filter(status='Approved')
     loans_sum = loans.aggregate(Sum('principal'))['principal__sum']
 
     context = {
