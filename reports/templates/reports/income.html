@@ -5,8 +5,10 @@
 {% if items %}
 <p>{{title}} Report</p>
 {% for item in items %}
-<p>{{item.received_from}}
-<p>{{ item.amount }}||</p>
+<h3>received from:{{item.received_from}}</h3>
+<p>inc type:{{ item.income_type }}</p>
+<p>loan num:{{ item.loan_num}}</p>
+<p>amount:{{ item.amount }}||</p>
 {% endfor %}
 
 {% else %}
