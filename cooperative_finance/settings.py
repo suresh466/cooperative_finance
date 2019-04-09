@@ -26,7 +26,7 @@ SECRET_KEY = os.environ.get('CO_FINANCE_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['cooperative-finance.herokuapp.com']
+ALLOWED_HOSTS = ['cooperative-finance.herokuapp.com', '127.0.0.1']
 
 
 # Application definition
