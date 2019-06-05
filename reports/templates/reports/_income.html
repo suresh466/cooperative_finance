@@ -1,6 +1,6 @@
-{% if items %}
-<p>{{title}} Report</p>
-{% for item in items %}
+{% if items_income %}
+<p>{{title_income}} Report</p>
+{% for item in items_income %}
 <h3>received from:{{item.received_from}}</h3>
 <p>inc type:{{ item.income_type }}</p>
 <p>loan num:{{ item.loan_num}}</p>
