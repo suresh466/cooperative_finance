@@ -6,11 +6,9 @@ from django import forms
 
 from .forms import (LoanIssueForm,LoanPaymentForm,
        GetLoanNumForm,LoanAccountForm) 
-from .models import LoanAccount, LoanDelete
                     
-                    
-                    
-from .models import (LoanIssue,LoanPayment,)
+from .models import (LoanAccount,LoanIssue,
+    LoanPayment,)
 
 # Create your views here.
 
