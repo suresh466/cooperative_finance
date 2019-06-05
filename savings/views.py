@@ -7,7 +7,7 @@ from .forms import (SavingDepositForm,SavingWithdrawalForm,
         GetSavingAccountForm,SavingAccountForm,)
                     
 from .models import (SavingDeposit,SavingWithdrawal,
-                    SavingAccount,SavingDelete)
+                    SavingAccount,)
 
 # Create your views here.
 

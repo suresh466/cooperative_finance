@@ -11,6 +11,12 @@ ACCOUNT_STATUS_CHOICE = (
             ('Activated', 'Activated'),
             )
 
+DELETE_STATUS_CHOICE = (
+            ('False', 'False'),
+            ('True', 'True'),
+            )
+
+
 class SavingAccount(models.Model):
     owner = models.OneToOneField(Member, on_delete=models.CASCADE)
     current_balance = models.PositiveIntegerField()
@@ -22,6 +28,7 @@ class SavingAccount(models.Model):
 class SavingDeposit(models.Model):
     account = models.ForeignKey(SavingAccount, on_delete=models.CASCADE)
     amount = models.PositiveIntegerField()
+    delete_status = models.CharField(choices=DELETE_STATUS_CHOICE, default='False', max_length=5, editable=False)
 
     def __str__(self):
         return self.account.owner.first_name
@@ -29,17 +36,10 @@ class SavingDeposit(models.Model):
 class SavingWithdrawal(models.Model):
     account = models.ForeignKey(SavingAccount, on_delete=models.CASCADE)
     amount = models.PositiveIntegerField()
+    delete_status = models.CharField(choices=DELETE_STATUS_CHOICE, default='False', max_length=5, editable=False)
 
     def __str__(self):
         return self.account.owner.first_name
-
-class SavingDelete(models.Model):
-    tran_type = models.CharField(max_length=10)
-    amount = models.PositiveIntegerField()
-    account = models.CharField(max_length=256)
-
-    def __str__(self):
-        return self.account
 
 @receiver(post_save, sender=Member)
 def create_account(sender, **kwargs):
