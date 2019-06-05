@@ -6,7 +6,7 @@ from .forms import (ShareAccountForm,ShareBuyForm,
         ShareSellForm,GetShareAccountForm)
 
 from .models import (ShareBuy,ShareSell,
-        ShareAccount,ShareDelete)
+        ShareAccount,)
 # Create your views here.
 
 def share_account(request):
