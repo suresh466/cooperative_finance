@@ -108,7 +108,7 @@ def loan_payment(request, **kwargs):
 def loan_issue_transactions(request):
     template = 'loans/loans_transactions.html'
 
-    loans = LoanIssue.objects.filter(status='Approved')
+    loans = LoanIssue.objects.filter(status='Approved',delete_status = False)
     loans_sum = loans.aggregate(Sum('principal'))['principal__sum']
 
     context = {
@@ -122,7 +122,7 @@ def loan_issue_transactions(request):
 def loan_payment_transactions(request):
     template = 'loans/loans_transactions.html'
 
-    loans = LoanPayment.objects
+    loans = LoanPayment.objects.filter(delete_status = False)
     loans_sum = loans.aggregate(Sum('principal'))['principal__sum']
 
     context = {
@@ -140,7 +140,7 @@ def loan_issue_transaction(request):
 
     if form.is_valid():
         ordered_loan = form.save(commit=False)
-        loans = LoanIssue.objects.filter(loan_num = ordered_loan.loan_num.loan_num)
+        loans = LoanIssue.objects.filter(loan_num = ordered_loan.loan_num.loan_num, delete_status = False)
         loans_sum = loans.aggregate(Sum('principal'))['principal__sum']
         messages.success(request,
                         'Loan Issue loans of loan number {}.'
@@ -166,7 +166,7 @@ def loan_payment_transaction(request):
 
     if form.is_valid():
         ordered_loan = form.save(commit=False)
-        loans = LoanPayment.objects.filter(loan_num = ordered_loan.loan_num)
+        loans = LoanPayment.objects.filter(loan_num = ordered_loan.loan_num, delete_status = False)
         loans_sum = loans.aggregate(Sum('principal'))['principal__sum']
         messages.success(request,
                          'Loan Payment loans of loan number {}.'
