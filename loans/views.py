@@ -269,12 +269,10 @@ def loan_issue_delete(request, pk):
     issue = get_object_or_404(LoanIssue, pk=pk)
 
     if request.method == "POST":
-        deleted = LoanDelete.objects.create(tran_type="issue",principal=issue.principal,
-                                             account=issue.account.owner.first_name,
-                                             loan_num = issue.loan_num)
         issue.account.total_principal -= issue.principal
         issue.account.save()
-        issue.delete()
+        issue.delete_status = True
+        issue.save()
         messages.success(request,
                         'You successfully deleted loans_issue of account {}, principal {} and loan no. {}.'
                         .format(issue.account,issue.principal,issue.loan_num))
@@ -295,11 +293,10 @@ def loan_payment_delete(request, pk):
     payment = get_object_or_404(LoanPayment, pk=pk)
 
     if request.method == "POST":
-        deleted = LoanDelete.objects.create(tran_type="payment",principal=payment.principal,
-                                             loan_num = payment.loan_num)
         payment.loan_num.account.total_principal += payment.principal
         payment.loan_num.account.save()
-        payment.delete()
+        issue.delete_status = True
+        payment.save()
         messages.success(request,
                         'You successfully deleted loans_payment of principal {} and loan no. {}.'
                         .format(payment.principal,payment.loan_num))
