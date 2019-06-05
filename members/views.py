@@ -43,16 +43,16 @@ def member_detail(request, mem_number):
 
     member = get_object_or_404(Member, mem_number=mem_number)
     saving_ac = get_object_or_404(SavingAccount, owner=member)
-    deposit_transactions = SavingDeposit.objects.filter(account=saving_ac)
-    withdrawal_transactions = SavingWithdrawal.objects.filter(account=saving_ac)
+    deposit_transactions = SavingDeposit.objects.filter(account=saving_ac, delete_status = False)
+    withdrawal_transactions = SavingWithdrawal.objects.filter(account=saving_ac, delete_status = False)
     loan_ac = get_object_or_404(LoanAccount, owner=member)
-    pending_loan = LoanIssue.objects.filter(account=loan_ac, status="Pending")
-    approved_loan = LoanIssue.objects.filter(account=loan_ac, status="Approved")
-    issue_transactions = LoanIssue.objects.filter(account=loan_ac)
-    payment_transactions = LoanPayment.objects.filter(loan_num__account=loan_ac)
+    pending_loan = LoanIssue.objects.filter(account=loan_ac, status="Pending", delete_status = False)
+    approved_loan = LoanIssue.objects.filter(account=loan_ac, status="Approved", delete_status = False)
+    issue_transactions = LoanIssue.objects.filter(account=loan_ac, delete_status = False)
+    payment_transactions = LoanPayment.objects.filter(loan_num__account=loan_ac, delete_status = False)
     share_ac = get_object_or_404(ShareAccount, owner=member)
-    sell_transactions = ShareSell.objects.filter(account=share_ac)
-    buy_transactions = ShareBuy.objects.filter(account=share_ac)
+    sell_transactions = ShareSell.objects.filter(account=share_ac, delete_status = False)
+    buy_transactions = ShareBuy.objects.filter(account=share_ac, delete_status = False)
     
     context = {
             'member': member,

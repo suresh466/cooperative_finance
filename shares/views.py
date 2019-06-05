@@ -6,7 +6,7 @@ from .forms import (ShareAccountForm,ShareBuyForm,
         ShareSellForm,GetShareAccountForm)
 
 from .models import (ShareBuy,ShareSell,
-        ShareAccount,ShareDelete)
+        ShareAccount,)
 # Create your views here.
 
 def share_account(request):
@@ -29,7 +29,6 @@ def share_buy(request, **kwargs):
     template = 'shares/shares_form.html'
 
     if request.method == "POST":
-        print("***********ok first")
         form = ShareBuyForm(request.POST)
         if form.is_valid():
             buy = form.save(commit=False)
@@ -102,7 +101,7 @@ def share_sell(request, **kwargs):
 def share_buy_transactions(request):
     template = 'shares/shares_transactions.html'
 
-    shares = ShareBuy.objects
+    shares = ShareBuy.objects.filter(delete_status = False)
     shares_sum = shares.aggregate(Sum('number'))['number__sum']
 
     context = {
@@ -116,7 +115,8 @@ def share_buy_transactions(request):
 def share_sell_transactions(request):
     template = 'shares/shares_transactions.html'
 
-    shares = ShareSell.objects
+    shares = ShareSell.objects.filter(delete_status = False)
+
     shares_sum = shares.aggregate(Sum('number'))['number__sum']
 
     context = {
@@ -134,7 +134,7 @@ def share_buy_transaction(request):
 
     if form.is_valid():
         ordered_account = form.save(commit=False)
-        shares = ShareBuy.objects.filter(account = ordered_account.account)
+        shares = ShareBuy.objects.filter(account = ordered_account.account,delete_status = False)
         shares_sum = shares.aggregate(Sum('number'))['number__sum']
         messages.success(request,
                 'Buys of share account number {}.'
@@ -162,7 +162,7 @@ def share_sell_transaction(request):
 
     if form.is_valid():
         ordered_account = form.save(commit=False)
-        shares = ShareSell.objects.filter(account = ordered_account.account)
+        shares = ShareSell.objects.filter(account = ordered_account.account, delete_status = False)
         shares_sum = shares.aggregate(Sum('number'))['number__sum']
         messages.success(request,
                 'Sells of share account number {}.'
@@ -194,11 +194,10 @@ def share_buy_delete(request, pk):
     buy = get_object_or_404(ShareBuy, pk=pk)
 
     if request.method == "POST":
-        deleted = ShareDelete.objects.create(tran_type="buy",number=buy.number,
-                                             account=buy.account.owner.first_name)
         buy.account.current_share -= buy.number
         buy.account.save()
-        buy.delete()
+        buy.delete_status = True
+        buy.save()
         messages.success(request,
                         'You successfully deleted share_buy of account {} and number {}.'
                         .format(buy.account,buy.number))
@@ -219,11 +218,10 @@ def share_sell_delete(request, pk):
     sell = get_object_or_404(ShareSell, pk=pk)
 
     if request.method == "POST":
-        deleted = ShareDelete.objects.create(tran_type="sell",number=sell.number,
-                                             account=sell.account.owner.first_name)
         sell.account.current_share += sell.number
         sell.account.save()
-        sell.delete()
+        sell.delete_status = True
+        sell.save()
         messages.success(request,
                         'You successfully deleted share_sell of account {} and number {}.'
                         .format(sell.account,sell.number))
