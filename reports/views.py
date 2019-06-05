@@ -12,7 +12,7 @@ def report(request):
     return render(request, template)
 
 def _income():
-    incomes = Income.objects.all()
+    incomes = Income.objects.filter(delete_status = False)
     return incomes
 
 def income(request):
@@ -26,7 +26,7 @@ def income(request):
     return render(request, template, context)
 
 def _expense():
-    expenses = Expense.objects.all()
+    expenses = Expense.objects.filter(delete_status = False)
     return expenses
 
 def expense(request):
@@ -40,8 +40,8 @@ def expense(request):
     return render(request, template, context)
 
 def _loan():
-    loans_rec = LoanPayment.objects.all()
-    loans_issued = LoanIssue.objects.filter(status='Approved')
+    loans_rec = LoanPayment.objects.filter(delete_status = False)
+    loans_issued = LoanIssue.objects.filter(status='Approved', delete_status = False)
     return {'loans_rec': loans_rec, 'loans_issued': loans_issued}
 
 def loan(request):
@@ -59,18 +59,18 @@ def loan(request):
 
 def _capital():
 
-    shares_buy = ShareBuy.objects.all()
-    shares_sell = ShareSell.objects.all()
+    shares_buy = ShareBuy.objects.filter(delete_status = False)
+    shares_sell = ShareSell.objects.filter(delete_status = False)
     shares_buy_sum = shares_buy.aggregate(Sum('number'))['number__sum']
     shares_sell_sum = shares_sell.aggregate(Sum('number'))['number__sum']
 
-    savings_deposit = SavingDeposit.objects.all()
-    savings_withdrawal = SavingWithdrawal.objects.all()
+    savings_deposit = SavingDeposit.objects.filter(delete_status = False)
+    savings_withdrawal = SavingWithdrawal.objects.filter(delete_status = False)
     savings_deposit_sum = savings_deposit.aggregate(Sum('amount'))['amount__sum']
     savings_withdrawal_sum= savings_withdrawal.aggregate(Sum('amount'))['amount__sum']
 
-    loan_payment = LoanPayment.objects.all()
-    loan_issued = LoanIssue.objects.filter(status='Approved')
+    loan_payment = LoanPayment.objects.filter(delete_status = False)
+    loan_issued = LoanIssue.objects.filter(status='Approved', delete_status = False)
     loan_payment_sum= loan_payment.aggregate(Sum('principal'))['principal__sum']
     loan_issued_sum= loan_issued.aggregate(Sum('principal'))['principal__sum']
 
