@@ -194,11 +194,10 @@ def share_buy_delete(request, pk):
     buy = get_object_or_404(ShareBuy, pk=pk)
 
     if request.method == "POST":
-        deleted = ShareDelete.objects.create(tran_type="buy",number=buy.number,
-                                             account=buy.account.owner.first_name)
         buy.account.current_share -= buy.number
         buy.account.save()
-        buy.delete()
+        buy.delete_status = True
+        buy.save()
         messages.success(request,
                         'You successfully deleted share_buy of account {} and number {}.'
                         .format(buy.account,buy.number))
@@ -219,11 +218,10 @@ def share_sell_delete(request, pk):
     sell = get_object_or_404(ShareSell, pk=pk)
 
     if request.method == "POST":
-        deleted = ShareDelete.objects.create(tran_type="sell",number=sell.number,
-                                             account=sell.account.owner.first_name)
         sell.account.current_share += sell.number
         sell.account.save()
-        sell.delete()
+        sell.delete_status = True
+        sell.save()
         messages.success(request,
                         'You successfully deleted share_sell of account {} and number {}.'
                         .format(sell.account,sell.number))
