@@ -197,11 +197,10 @@ def saving_deposit_delete(request, pk):
     deposit = get_object_or_404(SavingDeposit, pk=pk)
 
     if request.method == "POST":
-        deleted = SavingDelete.objects.create(tran_type="deposit",amount=deposit.amount,
-                                             account=deposit.account.owner.first_name)
         deposit.account.current_balance -= deposit.amount
         deposit.account.save()
-        deposit.delete()
+        deposit.delete_status = True
+        deposit.save()
         messages.success(request,
                         'You successfully deleted saving_deposit of account {} and amount {}.'
                         .format(deposit.account,deposit.amount))
@@ -222,11 +221,10 @@ def saving_withdrawal_delete(request, pk):
     withdrawal = get_object_or_404(SavingWithdrawal, pk=pk)
 
     if request.method == "POST":
-        deleted = SavingDelete.objects.create(tran_type="withdrawal",amount=withdrawal.amount,
-                                             account=withdrawal.account.owner.first_name)
         withdrawal.account.current_balance += withdrawal.amount
         withdrawal.account.save()
-        withdrawal.delete()
+        withdrawal.delete_status = True
+        withdrawal.save()
         messages.success(request,
                         'You successfully deleted saving_withdrawal of account {} and amount {}.'
                         .format(withdrawal.account,withdrawal.amount))
@@ -236,7 +234,7 @@ def saving_withdrawal_delete(request, pk):
 
     context = {
         'item': withdrawal,
-        'type': "deposit",
+        'type': "withdrawal",
     }
 
     return render(request, template, context)
