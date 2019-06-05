@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render,redirect,get_object_or_404
 from django.contrib import messages
 from django.db.models import Sum
 from django import forms
@@ -6,7 +6,7 @@ from .forms import (ShareAccountForm,ShareBuyForm,
         ShareSellForm,GetShareAccountForm)
 
 from .models import (ShareBuy,ShareSell,
-        ShareAccount,)
+        ShareAccount,ShareDelete)
 # Create your views here.
 
 def share_account(request):
@@ -188,4 +188,52 @@ def share(request):
 
     return render(request, template)
 
+def share_buy_delete(request, pk):
+    template = 'shares/shares_delete.html'
 
+    buy = get_object_or_404(ShareBuy, pk=pk)
+
+    if request.method == "POST":
+        deleted = ShareDelete.objects.create(tran_type="buy",number=buy.number,
+                                             account=buy.account.owner.first_name)
+        buy.account.current_share -= buy.number
+        buy.account.save()
+        buy.delete()
+        messages.success(request,
+                        'You successfully deleted share_buy of account {} and number {}.'
+                        .format(buy.account,buy.number))
+        previous = request.POST.get('previous', None)
+
+        return redirect(previous)
+
+    context = {
+        'item': buy,
+        'type': "Buy",
+    }
+
+    return render(request, template, context)
+
+def share_sell_delete(request, pk):
+    template = 'shares/shares_delete.html'
+
+    sell = get_object_or_404(ShareSell, pk=pk)
+
+    if request.method == "POST":
+        deleted = ShareDelete.objects.create(tran_type="sell",number=sell.number,
+                                             account=sell.account.owner.first_name)
+        sell.account.current_share += sell.number
+        sell.account.save()
+        sell.delete()
+        messages.success(request,
+                        'You successfully deleted share_sell of account {} and number {}.'
+                        .format(sell.account,sell.number))
+        previous = request.POST.get('previous', None)
+
+        return redirect(previous)
+
+    context = {
+        'item': sell,
+        'type': "Sell",
+    }
+
+    return render(request, template, context)

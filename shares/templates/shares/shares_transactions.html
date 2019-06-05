@@ -33,7 +33,10 @@
     <tr>
     {% for transaction in transactions.all %}
 
-    <th scope="row">{{forloop.counter}}</th>
+    <th scope="row">{{forloop.counter}}<a href="{% if title == "Buys"  %}
+		    {% url 'shares:buy_delete' pk=transaction.id %}?previous={{request.path}}
+		    {% else %}
+		    {% url 'shares:sell_delete' pk=transaction.id %}?previous={{request.path}}{% endif %}">del</a></th>
     <td>{{ transaction.account }}</td>
     <td>{{title}}</td>
     <td>{{ transaction.number }}</td>

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h3> Search member </h3>
+<form action = "{% url 'search:member_results' %}"  method="GET">
+  <input name="mq" value="{{ request.GET.q }}" placeholder="member search" />
+  <button type="submit">Submit</button>
+</form>
+
+<h3> Search loan </h3>
+<form action = "{% url 'search:loan_results' %}"  method="GET">
+  <input name="lq" value="{{ request.GET.q }}" placeholder="loan search" />
+  <button type="submit">Submit</button>
+</form>
+
+<h4>{{title}} result</h4>
+{% if results %}
+{% for result in results.all %}
+<p>{{ result.first_name }}</p>
+<p>{{ result.mem_number }}</p>
+<p>{{ result.address }}</p>
+
+<p>{{ result.loan_num}}</p>
+<p>{{ result.principal }}</p>
+<p>{{ result.status }}</p>
+<p>{{ result.account }}</p>
+
+{% endfor %}
+{% endif %}
+
+{% endblock %}
