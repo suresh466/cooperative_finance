@@ -14,9 +14,16 @@
 
 {% for transaction in transactions %}
 
-<p>{{ transaction.amount }}</p>
-<p>{{ transaction.income_type }}</p>
-<p>{{ transaction.expense_type }}</p>
+{% if title == "Income" %}
+
+<p><a href="{% url 'accounting:income_delete' pk=transaction.id %}?previous={{request.path}}">del</a>
+{{ transaction.income_type }} : {{ transaction.amount }}</p>
+   {% else %}
+<p><a href="{% url 'accounting:expense_delete' pk=transaction.id %}?previous={{request.path}}">del</a>
+{{ transaction.expense_type }} : {{ transaction.amount }}</p>
+
+{% endif %}
+
 
 {% endfor %}
 
