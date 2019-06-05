@@ -1,11 +1,11 @@
 {% if items_expenses %}
-<p>{{title_expenses}} Report</p>
+<h1>{{title_expenses}} Report</h1>
 {% for item in items_expenses %}
 <h3>payed to:{{item.payed_to}}</h3>
 <p>expense type:{{item.expense_type}}</p>
-<p>amount:{{ item.amount }}||</p>
+<p>amount:{{ item.amount }}<p>
 {% endfor %}
 
 {% else %}
-<p>No expenses in this period</p>
+<h1>No {{title_expenses}} in this period</h1>
 {% endif %}

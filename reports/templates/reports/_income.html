@@ -1,13 +1,13 @@
 {% if items_income %}
-<p>{{title_income}} Report</p>
+<h1>{{title_income}} Report</h1>
 {% for item in items_income %}
 <h3>received from:{{item.received_from}}</h3>
 <p>inc type:{{ item.income_type }}</p>
 <p>loan num:{{ item.loan_num}}</p>
-<p>amount:{{ item.amount }}||</p>
+<p>amount:{{ item.amount }}</p>
 {% endfor %}
 
 {% else %}
-<p>No incomes in this period</p>
+<h1>No {{title_income}} in this period</h1>
 {% endif %}
 
