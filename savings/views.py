@@ -107,7 +107,7 @@ def saving_withdrawal(request, **kwargs):
 def saving_deposit_transactions(request):
     template = 'savings/savings_transactions.html'
 
-    savings = SavingDeposit.objects
+    savings = SavingDeposit.objects.filter(delete_status=False)
     savings_sum = savings.aggregate(Sum('amount'))['amount__sum']
 
     context = {
@@ -121,7 +121,7 @@ def saving_deposit_transactions(request):
 def saving_withdrawal_transactions(request):
     template = 'savings/savings_transactions.html'
 
-    savings = SavingWithdrawal.objects
+    savings = SavingWithdrawal.objects.filter(delete_status=False)
     savings_sum = savings.aggregate(Sum('amount'))['amount__sum']
 
     context = {
@@ -139,7 +139,7 @@ def saving_deposit_transaction(request):
 
     if form.is_valid():
         ordered_account = form.save(commit=False)
-        savings = SavingDeposit.objects.filter(account = ordered_account.account)
+        savings = SavingDeposit.objects.filter(account = ordered_account.account, delete_status=False)
         savings_sum = savings.aggregate(Sum('amount'))['amount__sum']
         messages.success(request,
                          'Deposit savings of savings account number {}.'
@@ -166,7 +166,7 @@ def saving_withdrawal_transaction(request):
 
     if form.is_valid():
         ordered_account = form.save(commit=False)
-        savings = SavingWithdrawal.objects.filter(account = ordered_account.account)
+        savings = SavingWithdrawal.objects.filter(account = ordered_account.account, delete_status=False)
         savings_sum = savings.aggregate(Sum('amount'))['amount__sum']
         messages.success(request,
                          'Withdrawal ransactions of savings account number {}.'
