@@ -52,11 +52,11 @@
 <p>Amount: {{ share_ac.current_share}}</p>
 <a href="{% url "shares:buypk" pk=share_ac.pk %}">Buy</a>
 <a href="{% url "shares:sellpk" pk=share_ac.pk %}">Sell</a>
-<h3>Share sell transactions:</h3>
-{% for transaction in sell_transactions %}
+<h3>Share buy transactions:</h3>
+{% for transaction in buy_transactions %}
 <p>{{transaction}} : {{transaction.number}}</p>
 {% endfor %}
-<h3>Share buy transactions:</h3>
+<h3>Share sell transactions:</h3>
 {% for transaction in sell_transactions %}
 <p>{{transaction}} : {{transaction.number}}</p>
 {% endfor %}

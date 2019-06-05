@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'savings',
     'loans',
     'shares',
+    'reports',
     'accounting',
     'search',
 ]
