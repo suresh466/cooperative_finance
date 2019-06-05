@@ -2,18 +2,7 @@
 
 {% block content %}
 
-{% if items %}
-<p>{{title}} Report</p>
-{% for item in items %}
-<h3>received from:{{item.received_from}}</h3>
-<p>inc type:{{ item.income_type }}</p>
-<p>loan num:{{ item.loan_num}}</p>
-<p>amount:{{ item.amount }}||</p>
-{% endfor %}
-
-{% else %}
-<p>No incomes in this period</p>
-{% endif %}
+{% include 'reports/_income.html' %}
 
 {% endblock %}
 
