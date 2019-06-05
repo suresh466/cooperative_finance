@@ -33,7 +33,7 @@ def expense(request):
     template = 'reports/expense.html'
 
     context = {
-            'items_expenses': _expenses(),
+            'items_expenses': _expense(),
             'title_expenses': "Expense",
             }
 
@@ -47,11 +47,11 @@ def _loan():
 def loan(request):
     template = 'reports/loans.html'
 
-    items = _loan()
+    loan = _loan()
 
     context = {
-            'items_loans': items.get("loans_rec","none"),
-            'issued_items_loans': items.get("loans_issued","none"),
+            'items_loans': loan.get("loans_rec","none"),
+            'issued_items_loans': loan.get("loans_issued","none"),
             'title_loans': 'Loans',
             }
 
@@ -84,16 +84,69 @@ def _capital():
 def capital(request):
     template = 'reports/capital.html'
 
-    items = _capital()
+    capital = _capital()
 
     context = {
-            'shares_buy_sum_capital': items.get('shares_buy_sum','none'),
-            'shares_sell_sum_capital': items.get('shares_sell_sum','none'),
-            'savings_deposit_sum_capital': items.get('savings_deposit_sum','none'),
-            'savings_withdrawal_sum_capital': items.get('savings_withdrawal_sum','none'),
-            'loan_payment_sum_capital': items.get('loan_payment_sum','none'),
-            'loan_issued_sum_capital': items.get('loan_issued_sum','none'),
+            'shares_buy_sum_capital': capital.get('shares_buy_sum','none'),
+            'shares_sell_sum_capital': capital.get('shares_sell_sum','none'),
+            'savings_deposit_sum_capital': capital.get('savings_deposit_sum','none'),
+            'savings_withdrawal_sum_capital': capital.get('savings_withdrawal_sum','none'),
+            'loan_payment_sum_capital': capital.get('loan_payment_sum','none'),
+            'loan_issued_sum_capital': capital.get('loan_issued_sum','none'),
             'title_capital': 'Capital',
             }
 
     return render (request, template, context)
+
+def monthly(request):
+    template = 'reports/yearly.html'
+
+    loan = _loan()
+    capital = _capital()
+
+    context = {
+        'title_yearly': 'Monthly',
+        'items_income': _income(),
+        'title_income': 'Income',
+        'items_expenses': _expense(),
+        'title_expenses': 'Expense',
+        'items_loans': loan.get('loans_rec','none'),
+        'issued_items_loans': loan.get('loans_issued','none'),
+        'title_loans': 'Loans',
+        'shares_buy_sum_capital': capital.get('shares_buy_sum','none'),
+        'shares_sell_sum_capital': capital.get('shares_sell_sum','none'),
+        'savings_deposit_sum_capital': capital.get('savings_deposit_sum','none'),
+        'savings_withdrawal_sum_capital': capital.get('savings_withdrawal_sum','none'),
+        'loan_payment_sum_capital': capital.get('loan_payment_sum','none'),
+        'loan_issued_sum_capital': capital.get('loan_issued_sum','none'),
+        'title_capital': 'Capital',
+        }
+
+    return render(request, template, context)
+
+
+def yearly(request):
+    template = 'reports/yearly.html'
+
+    loan = _loan()
+    capital = _capital()
+
+    context = {
+        'title_yearly': 'Yearly',
+        'items_income': _income(),
+        'title_income': 'Income',
+        'items_expenses': _expense(),
+        'title_expenses': 'Expense',
+        'items_loans': loan.get('loans_rec','none'),
+        'issued_items_loans': loan.get('loans_issued','none'),
+        'title_loans': 'Loans',
+        'shares_buy_sum_capital': capital.get('shares_buy_sum','none'),
+        'shares_sell_sum_capital': capital.get('shares_sell_sum','none'),
+        'savings_deposit_sum_capital': capital.get('savings_deposit_sum','none'),
+        'savings_withdrawal_sum_capital': capital.get('savings_withdrawal_sum','none'),
+        'loan_payment_sum_capital': capital.get('loan_payment_sum','none'),
+        'loan_issued_sum_capital': capital.get('loan_issued_sum','none'),
+        'title_capital': 'Capital',
+        }
+
+    return render(request, template, context)
