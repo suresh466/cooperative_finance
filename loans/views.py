@@ -10,7 +10,13 @@ from .forms import (LoanIssueForm,LoanPaymentForm,
 from .models import (LoanAccount,LoanIssue,
     LoanPayment,)
 
+from accounting.models import Income,IncomeType
+
 # Create your views here.
+
+# for charging loan fee by default look at loan_approve function
+LOAN_FEE_PK = 1
+LOAN_FEE_PERCENT = 2
 
 def loan_account(request):
     template = 'loans/loans_form.html'
@@ -278,6 +284,8 @@ def loan_approve(request, **kwargs):
                         "This account is not yet activated please activate the account first")
             return redirect("loans:loan")
         #adds issued principal to the users total_principal of loan ac
+        income_type = get_object_or_404(IncomeType, pk=LOAN_FEE_PK)
+        Income.objects.create(amount=LOAN_FEE_PERCENT/100*issue.principal, received_from=issue.account.owner, loan_num=issue, income_type=income_type)
         issue.account.total_principal += issue.principal
         issue.account.save()
         issue.save()
