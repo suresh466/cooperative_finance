@@ -6,7 +6,7 @@ class SavingAccountForm(forms.ModelForm):
 
     class Meta:
         model = SavingAccount
-        fields = ('__all__')
+        fields = ('owner','status',)
 
 class SavingDepositForm(forms.ModelForm):
 

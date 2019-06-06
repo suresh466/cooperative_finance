@@ -5,13 +5,14 @@ from .views import (loan_issue,loan_payment,
                     loan_issue_transaction,loan_payment_transaction,
                     loan_approve,loan_account,loan,
                     get_loan,loan_issue_delete,
-                    loan_payment_delete,)
+                    loan_payment_delete,get_loan_account)
 
 app_name = 'loans'
 
 urlpatterns = [
     path('', loan, name='loan'),
-    path('create/', loan_account, name='create'),
+    path('get', get_loan_account, name='get_loan_account'),
+    path('de|activate/', loan_account, name='de|activate'),
     path('pay/', loan_payment, name='pay'),
     path('pay/<int:pk>/', loan_payment, name='paypk'),
     path('pay/<int:pk>/delete', loan_payment_delete, name='payment_delete'),

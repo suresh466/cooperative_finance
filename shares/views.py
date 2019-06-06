@@ -12,15 +12,22 @@ from .models import (ShareBuy,ShareSell,
 def share_account(request):
     template = 'shares/shares_form.html'
 
-    form = ShareAccountForm(request.POST or None)
+    pk = request.session['ordered_shares_pk']
+
+    ordered_share_ac = get_object_or_404(ShareAccount, pk=pk)
+
+    if request.method == 'POST':
+        form = ShareAccountForm(request.POST, instance=ordered_share_ac)
+    else:
+        form = ShareAccountForm(instance=ordered_share_ac)
 
     if form.is_valid():
         form.save()
-        return redirect('home')
+        return redirect('shares:share')
 
     context = {
             'form': form,
-            'title': "Create",
+            'title': "de|activate",
     }
 
     return render(request, template, context)
@@ -131,6 +138,24 @@ def share_sell_transactions(request):
             'transactions': shares,
             'transaxtions_sum': shares_sum,
             'title': "Sells",
+            }
+
+    return render(request, template, context)
+
+def get_share_account(request):
+    template = 'shares/shares_form.html'
+
+    form = GetShareAccountForm(request.POST or None)
+
+    if form.is_valid():
+        shares_account = form.save(commit=False)
+        pk = shares_account.account.pk
+        request.session['ordered_shares_pk']=pk
+        return redirect("shares:de|activate")
+
+    context = {
+            'form': form,
+            'title': "de|activate",
             }
 
     return render(request, template, context)

@@ -6,7 +6,7 @@ class ShareAccountForm(forms.ModelForm):
 
     class Meta:
         model = ShareAccount
-        fields = ('__all__')
+        fields = ('owner','status',)
 
 class ShareBuyForm(forms.ModelForm):
 
