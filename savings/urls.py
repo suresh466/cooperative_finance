@@ -4,12 +4,14 @@ from .views import (saving_deposit,saving_withdrawal,
         saving_deposit_transactions,saving_withdrawal_transactions,
         saving_deposit_transaction,saving_withdrawal_transaction,
         saving_account,saving,
-        saving_deposit_delete,saving_withdrawal_delete)
+        saving_deposit_delete,saving_withdrawal_delete,
+        get_saving_account)
 
 app_name = 'savings'
 urlpatterns = [
     path('', saving, name='saving'),
-    path('create/', saving_account, name='create'),
+    path('get', get_saving_account, name='get_savings_account'),
+    path('de|activate/', saving_account, name='de|activate'),
     path('deposit/', saving_deposit, name='deposit'),
     path('deposit/<int:pk>/', saving_deposit, name='depositpk'),
     path('deposit/<int:pk>/delete/', saving_deposit_delete, name='deposit_delete'),

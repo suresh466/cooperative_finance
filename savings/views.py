@@ -14,15 +14,22 @@ from .models import (SavingDeposit,SavingWithdrawal,
 def saving_account(request):
     template = 'savings/savings_form.html'
 
-    form = SavingAccountForm(request.POST or None)
+    pk = request.session['ordered_savings_pk']
+
+    ordered_saving_ac = get_object_or_404(SavingAccount, pk=pk)
+
+    if request.method == 'POST':
+        form = SavingAccountForm(request.POST, instance=ordered_saving_ac)
+    else:
+        form = SavingAccountForm(instance=ordered_saving_ac)
 
     if form.is_valid():
         form.save()
-        return redirect('home')
+        return redirect("savings:saving")
 
     context = {
             'form':form,
-            'title': "create",
+            'title': "de|activate",
             }
 
     return render(request, template, context)
@@ -139,6 +146,25 @@ def saving_withdrawal_transactions(request):
     }
 
     return render(request, template, context)
+
+def get_saving_account(request):
+    template = 'savings/savings_form.html'
+
+    form = GetSavingAccountForm(request.POST or None)
+
+    if form.is_valid():
+        savings_account = form.save(commit=False)
+        pk = savings_account.account.pk
+        request.session['ordered_savings_pk']=pk
+        return redirect("savings:de|activate")
+
+    context = {
+        'form': form,
+        'title': "de|activate",
+    }
+
+    return render(request, template, context)
+
 
 def saving_deposit_transaction(request):
     template = 'savings/savings_transactions.html'
