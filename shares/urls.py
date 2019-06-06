@@ -4,12 +4,14 @@ from .views import (share_account,share_buy,
         share_sell,share_buy_transactions,
         share_sell_transactions,share_buy_transaction,
         share_sell_transaction,share,
-        share_buy_delete,share_sell_delete,)
+        share_buy_delete,share_sell_delete,
+        get_share_account,)
 
 app_name = 'shares'
 urlpatterns = [
     path('', share, name='share'),
-    path('create/', share_account, name='create'),
+    path('get/', get_share_account, name='get_shares_account'),
+    path('de|activate/', share_account, name='de|activate'),
     path('buy/', share_buy, name='buy'),
     path('buy/<int:pk>/', share_buy, name='buypk'),
     path('buy/<int:pk>/delete/', share_buy_delete, name='buy_delete'),
