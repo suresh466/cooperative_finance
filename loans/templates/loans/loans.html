@@ -4,6 +4,12 @@
 
 <h2>Loanss Account Management</h2>
 
+{% if messages %}
+{% for message in messages %}
+<p>{{message}}</p>
+{% endfor %}
+{% endif %}
+
 <h3><a href="{% url 'loans:pay' %}">Pay</a></h3>
 <h3><a href="{% url 'loans:issue' %}">Issue</a></h3>
 <h3><a href="{% url 'loans:get_loan' %}">Approve</a></h3>
