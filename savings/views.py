@@ -35,6 +35,10 @@ def saving_deposit(request, **kwargs):
         form = SavingDepositForm(request.POST)
         if form.is_valid():
             deposit = form.save(commit=False)
+            if deposit.account.status == 'Deactivated':
+                messages.warning(request,
+                        "This account is not yet activated please activate the account first")
+                return redirect("savings:saving")
             # adds deposit to the users saving account current balance
             deposit.account.current_balance += deposit.amount
             deposit.account.save()
@@ -68,6 +72,10 @@ def saving_withdrawal(request, **kwargs):
         form = SavingWithdrawalForm(request.POST)
         if form.is_valid():
             withdraw = form.save(commit=False)
+            if withdraw.account.status == 'Deactivated':
+                messages.warning(request,
+                        "This account is not yet activated please activate the account first")
+                return redirect("savings:saving")
             # checks if withdrawal amount is valid
             if(withdraw.account.current_balance >= withdraw.amount and
                     withdraw.amount >= 10):
