@@ -36,6 +36,11 @@ def loan_issue(request, **kwargs):
         form = LoanIssueForm(request.POST)
         if form.is_valid():
             issue = form.save(commit=False)
+            if issue.account.status == 'Deactivated':
+                messages.warning(request,
+                        "This account is not yet activated please activate the account first")
+                return redirect("loans:loan")
+
             if issue.status == 'Approved':
             #adds issued principal to the users account total principal
                 issue.account.total_principal += issue.principal
@@ -71,6 +76,11 @@ def loan_payment(request, **kwargs):
         form = LoanPaymentForm(request.POST)
         if form.is_valid():
             payment = form.save(commit=False)
+            if payment.loan_num.account.status == 'Deactivated':
+                messages.warning(request,
+                        "This account is not yet activated please activate the account first")
+                return redirect("loans:loan")
+
             if not payment.loan_num.status == 'Approved':
                 messages.success(request,
                         'This loan with loan no. {} is not approved yet.'
@@ -236,6 +246,10 @@ def loan_approve(request, **kwargs):
 
     if form.is_valid():
         issue = form.save(commit=False)
+        if issue.account.status == 'Deactivated':
+            messages.warning(request,
+                        "This account is not yet activated please activate the account first")
+            return redirect("loans:loan")
         #adds issued principal to the users total_principal of loan ac
         issue.account.total_principal += issue.principal
         issue.account.save()

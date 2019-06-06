@@ -32,6 +32,10 @@ def share_buy(request, **kwargs):
         form = ShareBuyForm(request.POST)
         if form.is_valid():
             buy = form.save(commit=False)
+            if buy.account.status == "Deactivated":
+                messages.warning(request,
+                        "This account is not activated yet please activate the account first")
+                return redirect("shares:share")
             #adds bought share to current share of shares account
             buy.account.current_share += buy.number
             buy.account.save()
@@ -69,6 +73,10 @@ def share_sell(request, **kwargs):
         form = ShareSellForm(request.POST)
         if form.is_valid():
             sell = form.save(commit=False)
+            if sell.account.status == "Deactivated":
+                messages.warning(request,
+                        "This account is not activated yet please activate the account first")
+                return redirect("shares:share")
             #deletes sold share from current share of shares account
             sell.account.current_share -= sell.number
             sell.account.save()

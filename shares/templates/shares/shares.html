@@ -4,6 +4,12 @@
 
 <h2>shares Account Management</h2>
 
+{% if messages %}
+{% for message in messages %}
+<p>{{message}}</p>
+{% endfor %}
+{% endif %}
+
 <h3><a href="{% url 'shares:buy' %}">Buy</a></h3>
 <h3><a href="{% url 'shares:sell' %}">Sell</a></h3>
 <h3><a href="{% url 'shares:create' %}">Create</a></h3>

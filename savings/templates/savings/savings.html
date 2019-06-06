@@ -4,6 +4,13 @@
 
 <h2>Savings Account Management</h2>
 
+{% if messages %}
+
+{% for message in messages %}
+<p>{{message}}</p>
+{% endfor %}
+{% endif %}
+
 <h3><a href="{% url 'savings:withdraw' %}">Withdraw</a></h3>
 <h3><a href="{% url 'savings:deposit' %}">Deposit</a></h3>
 <h3><a href="{% url 'savings:create' %}">Create</a></h3>
