@@ -5,7 +5,7 @@ from django.db.models import Sum
 from django import forms
 
 from .forms import (LoanIssueForm,LoanPaymentForm,
-       GetLoanNumForm,LoanAccountForm) 
+       GetLoanNumForm,LoanAccountForm,GetLoanAccountForm) 
                     
 from .models import (LoanAccount,LoanIssue,
     LoanPayment,)
@@ -15,15 +15,24 @@ from .models import (LoanAccount,LoanIssue,
 def loan_account(request):
     template = 'loans/loans_form.html'
 
-    form = LoanAccountForm(request.POST or None)
+    pk = request.session['ordered_loans_pk']
+    print(pk)
+    print("*************")
+
+    ordered_loan_ac = get_object_or_404(LoanAccount, pk=pk)
+
+    if request.method == 'POST':
+        form = LoanAccountForm(request.POST, instance=ordered_loan_ac)
+    else:
+        form = LoanAccountForm(instance=ordered_loan_ac)
 
     if form.is_valid():
         form.save()
-        return redirect('home')
+        return redirect('loans:loan')
 
     context = {
             'form': form,
-            'title': "Create",
+            'title': "de|activate",
             }
 
     return render(request, template, context)
@@ -140,6 +149,24 @@ def loan_payment_transactions(request):
         'transactions_sum': loans_sum,
         'title': "Payment",
     }
+
+    return render(request, template, context)
+
+def get_loan_account(request):
+    template = 'loans/loans_form.html'
+
+    form = GetLoanAccountForm(request.POST or None)
+    
+    if form.is_valid():
+        loans_account = form.save(commit=False)
+        pk = loans_account.account.pk
+        request.session['ordered_loans_pk']=pk
+        return redirect("loans:de|activate")
+
+    context = {
+        'form': form,
+        'title': 'de|activate',
+        }
 
     return render(request, template, context)
 

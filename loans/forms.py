@@ -4,7 +4,7 @@ from .models import (LoanIssue,LoanPayment,LoanAccount)
 class LoanAccountForm(forms.ModelForm):
     class Meta:
         model = LoanAccount
-        fields = ('__all__')
+        fields = ('owner','status',)
 
 class LoanIssueForm(forms.ModelForm):
     class Meta:
@@ -20,3 +20,8 @@ class GetLoanNumForm(forms.ModelForm):
     class Meta:
         model = LoanPayment
         fields = ('loan_num',)
+
+class GetLoanAccountForm(forms.ModelForm):
+    class Meta:
+        model = LoanIssue
+        fields = ('account',)
