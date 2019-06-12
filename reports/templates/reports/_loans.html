@@ -4,7 +4,7 @@
 {% for item in items_loans %}
 <h3>loan num:{{item.loan_num}}</h3>
 <p>recovered amount:{{ item.principal}}</p>
-<p>date: insert date into loanpayment model</p>
+<p>date created: {{ item.date_created }}</p>
 {% endfor %}
 {% endif %}
 
@@ -16,7 +16,7 @@
 <p>issued amount:{{ item.principal}}</p>
 <p>interest: insert interest into loans model</p>
 <p>period: insert period into loans model</p>
-<p>date: insert date into loanpayment model</p>
+<p>date created: {{ item.date_created }}</p>
 {% endfor %}
 
 {% else %}
