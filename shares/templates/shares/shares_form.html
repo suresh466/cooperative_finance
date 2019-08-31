@@ -2,6 +2,8 @@
 
 {% block content %}
 
+<div class="container-fluid">
+
 {% if messages %}
 
 {% for message in messages %}
@@ -18,5 +20,6 @@
   <input type="submit" value="{{ title }}" />
 </form>
 
+</div>
 {% endblock content %}
 
