@@ -12,7 +12,8 @@ def report(request):
     return render(request, template)
 
 def _income():
-    incomes = Income.objects.filter(delete_status = False)
+    incomes = Income.objects.filter(delete_status = False, date_created__year = '2019',
+            date_created__month='08')
     return incomes
 
 def income(request):
@@ -26,7 +27,8 @@ def income(request):
     return render(request, template, context)
 
 def _expense():
-    expenses = Expense.objects.filter(delete_status = False)
+    expenses = Expense.objects.filter(delete_status = False, date_created__year = '2019',
+            date_created__month='08')
     return expenses
 
 def expense(request):
@@ -40,8 +42,10 @@ def expense(request):
     return render(request, template, context)
 
 def _loan():
-    loans_rec = LoanPayment.objects.filter(delete_status = False)
-    loans_issued = LoansIssue.objects.filter(delete_status = False)
+    loans_rec = LoanPayment.objects.filter(delete_status = False, date_created__year = '2019',
+            date_created__month='08')
+    loans_issued = LoansIssue.objects.filter(delete_status = False, date_created__year = '2019',
+            date_created__month = '08')
     return {'loans_rec': loans_rec, 'loans_issued': loans_issued}
 
 def loan(request):
@@ -59,18 +63,24 @@ def loan(request):
 
 def _capital():
 
-    shares_buy = ShareBuy.objects.filter(delete_status = False)
-    shares_sell = ShareSell.objects.filter(delete_status = False)
+    shares_buy = ShareBuy.objects.filter(delete_status = False, date_created__year = '2019',
+            date_created__month='08')
+    shares_sell = ShareSell.objects.filter(delete_status = False, date_created__year = '2019',
+            date_created__month='08')
     shares_buy_sum = shares_buy.aggregate(Sum('number'))['number__sum']
     shares_sell_sum = shares_sell.aggregate(Sum('number'))['number__sum']
 
-    savings_deposit = SavingDeposit.objects.filter(delete_status = False)
-    savings_withdrawal = SavingWithdrawal.objects.filter(delete_status = False)
+    savings_deposit = SavingDeposit.objects.filter(delete_status = False, date_created__year = '2019',
+            date_created__month='08')
+    savings_withdrawal = SavingWithdrawal.objects.filter(delete_status = False, date_created__year = '2019',
+            date_created__month='08')
     savings_deposit_sum = savings_deposit.aggregate(Sum('amount'))['amount__sum']
     savings_withdrawal_sum= savings_withdrawal.aggregate(Sum('amount'))['amount__sum']
 
-    loan_payment = LoanPayment.objects.filter(delete_status = False)
-    loans_issued = LoansIssue.objects.filter(delete_status = False)
+    loan_payment = LoanPayment.objects.filter(delete_status = False, date_created__year = '2019',
+            date_created__month='08')
+    loans_issued = LoansIssue.objects.filter(delete_status = False, date_created__year = '2019',
+            date_created__month='08')
     loan_payment_sum= loan_payment.aggregate(Sum('principal'))['principal__sum']
     loans_issued_sum = loans_issued.aggregate(Sum('principal'))['principal__sum']
 
