@@ -13,9 +13,12 @@ def report(request):
 
     return render(request, template)
 
-def _income(year=datetime.now().year, month=datetime.now().month):
-    incomes = Income.objects.filter(delete_status = False, date_created__year = year,
-            date_created__month = month)
+def _income(year=datetime.now().year, month=datetime.now().month, yearly=False):
+    if yearly == True:
+        incomes = Income.objects.filter(delete_status = False, date_created__year = year)
+    else:
+        incomes = Income.objects.filter(delete_status = False, date_created__year = year,
+                date_created__month = month)
     return incomes
 
 def income(request):
@@ -36,9 +39,12 @@ def income(request):
 
     return render(request, template, context)
 
-def _expense(year=datetime.now().year, month=datetime.now().month):
-    expenses = Expense.objects.filter(delete_status = False, date_created__year = year,
-            date_created__month = month)
+def _expense(year=datetime.now().year, month=datetime.now().month, yearly=False):
+    if yearly == True:
+        expenses = Expense.objects.filter(delete_status = False, date_created__year = year)
+    else:
+        expenses = Expense.objects.filter(delete_status = False, date_created__year = year,
+                date_created__month = month)
     return expenses
 
 def expense(request):
@@ -58,11 +64,15 @@ def expense(request):
 
     return render(request, template, context)
 
-def _loan(year=datetime.now().year, month=datetime.now().month):
-    loans_rec = LoanPayment.objects.filter(delete_status = False, date_created__year = year,
-            date_created__month = month)
-    loans_issued = LoansIssue.objects.filter(delete_status = False, date_created__year = year,
-            date_created__month = month)
+def _loan(year=datetime.now().year, month=datetime.now().month, yearly=False):
+    if yearly == True:
+        loans_rec = LoanPayment.objects.filter(delete_status = False, date_created__year = year)
+        loans_issued = LoansIssue.objects.filter(delete_status = False, date_created__year = year)
+    else:
+        loans_rec = LoanPayment.objects.filter(delete_status = False, date_created__year = year,
+                date_created__month = month)
+        loans_issued = LoansIssue.objects.filter(delete_status = False, date_created__year = year,
+                date_created__month = month)
     return {'loans_rec': loans_rec, 'loans_issued': loans_issued}
 
 def loan(request):
@@ -85,26 +95,41 @@ def loan(request):
 
     return render(request, template, context)
 
-def _capital(year=datetime.now().year, month=datetime.now().month):
+def _capital(year=datetime.now().year, month=datetime.now().month,yearly=False):
 
-    shares_buy = ShareBuy.objects.filter(delete_status = False, date_created__year = year,
-            date_created__month = month)
-    shares_sell = ShareSell.objects.filter(delete_status = False, date_created__year = year,
-            date_created__month = month)
+    if yearly == True:
+        shares_buy = ShareBuy.objects.filter(delete_status = False, date_created__year = year)
+        shares_sell = ShareSell.objects.filter(delete_status = False, date_created__year = year)
+
+        savings_deposit = SavingDeposit.objects.filter(delete_status = False, date_created__year = year)
+        savings_withdrawal = SavingWithdrawal.objects.filter(delete_status = False, date_created__year = year)
+
+        loan_payment = LoanPayment.objects.filter(delete_status = False, date_created__year = year)
+        loans_issued = LoansIssue.objects.filter(delete_status = False, date_created__year = year)
+    else:
+        shares_buy = ShareBuy.objects.filter(delete_status = False, date_created__year = year,
+                date_created__month = month)
+        shares_sell = ShareSell.objects.filter(delete_status = False, date_created__year = year,
+                date_created__month = month)
+
+        savings_deposit = SavingDeposit.objects.filter(delete_status = False, date_created__year = year,
+                date_created__month = month)
+        savings_withdrawal = SavingWithdrawal.objects.filter(delete_status = False, date_created__year = year,
+                date_created__month = month)
+
+        loan_payment = LoanPayment.objects.filter(delete_status = False, date_created__year = year,
+                date_created__month = month)
+        loans_issued = LoansIssue.objects.filter(delete_status = False, date_created__year = year,
+                date_created__month = month)
+        loan_payment_sum= loan_payment.aggregate(Sum('principal'))['principal__sum']
+        loans_issued_sum = loans_issued.aggregate(Sum('principal'))['principal__sum']
+
     shares_buy_sum = shares_buy.aggregate(Sum('number'))['number__sum']
     shares_sell_sum = shares_sell.aggregate(Sum('number'))['number__sum']
 
-    savings_deposit = SavingDeposit.objects.filter(delete_status = False, date_created__year = year,
-            date_created__month = month)
-    savings_withdrawal = SavingWithdrawal.objects.filter(delete_status = False, date_created__year = year,
-            date_created__month = month)
     savings_deposit_sum = savings_deposit.aggregate(Sum('amount'))['amount__sum']
     savings_withdrawal_sum= savings_withdrawal.aggregate(Sum('amount'))['amount__sum']
 
-    loan_payment = LoanPayment.objects.filter(delete_status = False, date_created__year = year,
-            date_created__month = month)
-    loans_issued = LoansIssue.objects.filter(delete_status = False, date_created__year = year,
-            date_created__month = month)
     loan_payment_sum= loan_payment.aggregate(Sum('principal'))['principal__sum']
     loans_issued_sum = loans_issued.aggregate(Sum('principal'))['principal__sum']
 
@@ -177,14 +202,23 @@ def monthly(request):
 def yearly(request):
     template = 'reports/yearly.html'
 
-    loan = _loan()
-    capital = _capital()
+    if request.method == 'POST':
+        year = request.POST.get('year')
+        loan = _loan(year=year,yearly=True)
+        capital = _capital(year=year,yearly=True)
+        incomes = _income(year=year,yearly=True)
+        expenses = _expense(year=year,yearly=True)
+    else:
+        loan = _loan(yearly=True)
+        capital = _capital(yearly=True)
+        incomes = _income(yearly=True)
+        expenses = _expense(yearly=True)
 
     context = {
         'title_yearly': 'Yearly',
-        'items_income': _income(),
+        'items_income': incomes,
         'title_income': 'Income',
-        'items_expenses': _expense(),
+        'items_expenses': expenses,
         'title_expenses': 'Expense',
         'items_loans': loan.get('loans_rec','none'),
         'issued_items_loans': loan.get('loans_issued','none'),
