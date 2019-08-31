@@ -4,6 +4,8 @@ from loans.models import LoanPayment,LoanIssue,LoansIssue
 from shares.models import ShareBuy,ShareSell
 from savings.models import SavingDeposit,SavingWithdrawal
 from django.db.models import Sum
+from datetime import datetime
+
 # Create your views here.
 
 def report(request):
@@ -11,16 +13,24 @@ def report(request):
 
     return render(request, template)
 
-def _income():
-    incomes = Income.objects.filter(delete_status = False, date_created__year = '2019',
-            date_created__month='08')
+def _income(year=datetime.now().year, month=datetime.now().month):
+    incomes = Income.objects.filter(delete_status = False, date_created__year = year,
+            date_created__month = month)
     return incomes
 
 def income(request):
     template = 'reports/income.html'
 
+    # Implement date picker or something else that is less error prone
+    if request.method == 'POST':
+        month = request.POST.get('month')
+        year = request.POST.get('year')
+        incomes = _income(year=year,month=month)
+    else:
+        incomes = _income()
+
     context = {
-        'items_income': _income(),
+        'items_income': incomes,
         'title_income': 'Income',
         }
 
