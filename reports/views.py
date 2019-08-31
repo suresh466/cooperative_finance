@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from accounting.models import Income,Expense
-from loans.models import LoanPayment,LoanIssue
+from loans.models import LoanPayment,LoanIssue,LoansIssue
 from shares.models import ShareBuy,ShareSell
 from savings.models import SavingDeposit,SavingWithdrawal
 from django.db.models import Sum
@@ -41,7 +41,7 @@ def expense(request):
 
 def _loan():
     loans_rec = LoanPayment.objects.filter(delete_status = False)
-    loans_issued = LoanIssue.objects.filter(status='Approved', delete_status = False)
+    loans_issued = LoansIssue.objects.filter(delete_status = False)
     return {'loans_rec': loans_rec, 'loans_issued': loans_issued}
 
 def loan(request):
@@ -70,13 +70,13 @@ def _capital():
     savings_withdrawal_sum= savings_withdrawal.aggregate(Sum('amount'))['amount__sum']
 
     loan_payment = LoanPayment.objects.filter(delete_status = False)
-    loan_issued = LoanIssue.objects.filter(status='Approved', delete_status = False)
+    loans_issued = LoansIssue.objects.filter(delete_status = False)
     loan_payment_sum= loan_payment.aggregate(Sum('principal'))['principal__sum']
-    loan_issued_sum= loan_issued.aggregate(Sum('principal'))['principal__sum']
+    loans_issued_sum = loans_issued.aggregate(Sum('principal'))['principal__sum']
 
     return {'shares_buy_sum': shares_buy_sum, 'shares_sell_sum': shares_sell_sum,
 	'savings_deposit_sum': savings_deposit_sum, 'savings_withdrawal_sum':savings_withdrawal_sum,
-	'loan_payment_sum': loan_payment_sum,'loan_issued_sum': loan_issued_sum,
+	'loan_payment_sum': loan_payment_sum,'loans_issued_sum': loans_issued_sum,
   	 }
 
 
@@ -92,7 +92,7 @@ def capital(request):
             'savings_deposit_sum_capital': capital.get('savings_deposit_sum','none'),
             'savings_withdrawal_sum_capital': capital.get('savings_withdrawal_sum','none'),
             'loan_payment_sum_capital': capital.get('loan_payment_sum','none'),
-            'loan_issued_sum_capital': capital.get('loan_issued_sum','none'),
+            'loans_issued_sum_capital': capital.get('loans_issued_sum','none'),
             'title_capital': 'Capital',
             }
 
@@ -118,7 +118,7 @@ def monthly(request):
         'savings_deposit_sum_capital': capital.get('savings_deposit_sum','none'),
         'savings_withdrawal_sum_capital': capital.get('savings_withdrawal_sum','none'),
         'loan_payment_sum_capital': capital.get('loan_payment_sum','none'),
-        'loan_issued_sum_capital': capital.get('loan_issued_sum','none'),
+        'loans_issued_sum_capital': capital.get('loans_issued_sum','none'),
         'title_capital': 'Capital',
         }
 
@@ -145,7 +145,7 @@ def yearly(request):
         'savings_deposit_sum_capital': capital.get('savings_deposit_sum','none'),
         'savings_withdrawal_sum_capital': capital.get('savings_withdrawal_sum','none'),
         'loan_payment_sum_capital': capital.get('loan_payment_sum','none'),
-        'loan_issued_sum_capital': capital.get('loan_issued_sum','none'),
+        'loans_issued_sum_capital': capital.get('loans_issued_sum','none'),
         'title_capital': 'Capital',
         }
 

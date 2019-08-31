@@ -52,6 +52,21 @@ class LoanPayment(models.Model):
     def __str__(self):
         return self.loan_num.account.owner.first_name
 
+class LoansIssue(models.Model):
+    account = models.ForeignKey(LoanAccount, on_delete=models.CASCADE)
+    loan_num = models.CharField(unique=True, max_length=255)
+    principal = models.PositiveIntegerField()
+    delete_status = models.CharField(choices=DELETE_STATUS_CHOICE, default='False', max_length=5, editable=False)
+    date_created = models.DateTimeField(auto_now_add=True)
+    date_updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.account.owner.first_name
+
+    class Meta:
+        verbose_name_plural = "Loans issued"
+
+
 @receiver(post_save, sender=Member)
 def create_account(sender, **kwargs):
     if kwargs['created']:

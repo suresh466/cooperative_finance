@@ -5,10 +5,10 @@ from django.db.models import Sum
 from django import forms
 
 from .forms import (LoanIssueForm,LoanPaymentForm,
-       GetLoanNumForm,LoanAccountForm,GetLoanAccountForm) 
-                    
+       GetLoanNumForm,LoanAccountForm,GetLoanAccountForm)
+
 from .models import (LoanAccount,LoanIssue,
-    LoanPayment,)
+    LoanPayment,LoansIssue)
 
 from accounting.models import Income,IncomeType
 
@@ -46,7 +46,7 @@ def loan_account(request):
 
 def loan_issue(request, **kwargs):
     template = 'loans/loans_form.html'
-    
+
     if request.method == "POST":
         form = LoanIssueForm(request.POST)
         if form.is_valid():
@@ -86,7 +86,7 @@ def loan_issue(request, **kwargs):
 
 def loan_payment(request, **kwargs):
     template = 'loans/loans_form.html'
-    
+
     if request.method == "POST":
         form = LoanPaymentForm(request.POST)
         if form.is_valid():
@@ -110,7 +110,7 @@ def loan_payment(request, **kwargs):
             messages.success(request,
                             'you have successfully paid Rs. {} only loan to the account number {}.'
                             .format(payment.principal,payment.loan_num.account.owner.mem_number))
-            
+
             if 'pk' in kwargs:
                 return redirect("loans:paypk", pk=kwargs['pk'])
             return redirect("loans:pay")
@@ -162,7 +162,7 @@ def get_loan_account(request):
     template = 'loans/loans_form.html'
 
     form = GetLoanAccountForm(request.POST or None)
-    
+
     if form.is_valid():
         loans_account = form.save(commit=False)
         pk = loans_account.account.pk
@@ -255,7 +255,7 @@ def get_loan(request, **kwargs):
         loan_num = loan.loan_num.loan_num
         request.session['loan_num']=loan_num
         return redirect("loans:approve")
-    
+
     context = {
         'form': form,
         'title': "approve",
@@ -264,7 +264,7 @@ def get_loan(request, **kwargs):
 
 def loan_approve(request, **kwargs):
     template = 'loans/loans_form.html'
-    
+
     if 'loan_num' in kwargs:
         loan_num = kwargs['loan_num']
     else:
@@ -289,9 +289,15 @@ def loan_approve(request, **kwargs):
         issue.account.total_principal += issue.principal
         issue.account.save()
         issue.save()
-        messages.success(
-                request,
-                'You have issued')
+        if issue.status == 'Approved':
+            LoansIssue.objects.create(account = issue.account, loan_num = issue.loan_num, principal = issue.principal)
+            messages.success(
+                    request,
+                    'You have issued')
+        else:
+            messages.warning(
+                    request,
+                    'Loan is not yet approved')
         #if request.session:
             #del request.session['loan_num']
         if 'loan_num' in kwargs:
