@@ -2,15 +2,16 @@
 
 {% block content %}
 
-{% if messages %}
-{% for message in messages %}
-<p>{{message}}</p>
-{% endfor %}
-{% endif %}
+<div class="container-fluid">
 
-<div class="container-fluid p-3">
+	{% if messages %}
+	{% for message in messages %}
+	<p>{{message}}</p>
+	{% endfor %}
+	{% endif %}
+
 	<h2 class="text-center">Savings Account Management</h2>
-	<div class="row">
+	<div class="row p-3 mt-3">
 		<div class="col-md-6">
 			<h4>Operations</h4>
 			<h3><a href="{% url 'savings:withdraw' %}">Withdraw</a></h3>
