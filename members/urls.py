@@ -7,5 +7,5 @@ app_name = 'members'
 urlpatterns = [
         path('', member, name='member'),
         path('create/', member_create, name='create'),
-        path('<int:mem_number>/', member_detail, name='member_detail'),
+        path('<str:mem_number>/', member_detail, name='member_detail'),
 ]
