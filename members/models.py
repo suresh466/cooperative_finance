@@ -8,7 +8,7 @@ ACCOUNT_STATUS_CHOICE = (
         )
 
 class Member(models.Model):
-    mem_number = models.PositiveIntegerField(unique=True)
+    mem_number = models.CharField(default="", unique=True, max_length=50, editable=False)
     first_name = models.CharField(max_length=256)
     last_name = models.CharField(max_length=256)
     address = models.CharField(max_length=256)
@@ -16,6 +16,19 @@ class Member(models.Model):
     status = models.CharField(choices=ACCOUNT_STATUS_CHOICE, default='Activated', max_length=11,editable=False)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        add = not self.pk
+        super(Member, self).save(*args, **kwargs)
+        if add:
+            date = self.date_created.strftime("%y%m%d")
+            if self.pk < 10:
+                pk = "0" + str(self.pk)
+            else:
+                pk = str(self.pk)
+            self.mem_number = date + pk
+            kwargs["force_insert"] = False
+            super(Member, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.first_name
