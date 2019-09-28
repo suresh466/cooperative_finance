@@ -14,7 +14,7 @@ def member_create(request):
     template = 'members/form.html'
 
     form = MemberCreateForm(request.POST or None)
-    
+
     if form.is_valid():
         form.save()
         return redirect('members:member')
@@ -30,12 +30,12 @@ def member_create(request):
 def member(request):
     template = 'members/members.html'
 
-    members = Member.objects
+    members = Member.objects.order_by("mem_number")
 
     context = {
             'members': members,
             }
-    
+
     return render(request, template, context)
 
 def member_detail(request, mem_number):
@@ -53,7 +53,7 @@ def member_detail(request, mem_number):
     share_ac = get_object_or_404(ShareAccount, owner=member)
     sell_transactions = ShareSell.objects.filter(account=share_ac, delete_status = False)
     buy_transactions = ShareBuy.objects.filter(account=share_ac, delete_status = False)
-    
+
     context = {
             'member': member,
             'saving_ac': saving_ac,
