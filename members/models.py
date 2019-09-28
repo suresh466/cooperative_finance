@@ -21,12 +21,11 @@ class Member(models.Model):
         add = not self.pk
         super(Member, self).save(*args, **kwargs)
         if add:
-            date = self.date_created.strftime("%y%m%d")
             if self.pk < 10:
                 pk = "0" + str(self.pk)
             else:
                 pk = str(self.pk)
-            self.mem_number = date + pk
+            self.mem_number = pk
             kwargs["force_insert"] = False
             super(Member, self).save(*args, **kwargs)
 
