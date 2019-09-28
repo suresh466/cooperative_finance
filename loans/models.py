@@ -32,12 +32,26 @@ class LoanAccount(models.Model):
 
 class LoanIssue(models.Model):
     account = models.ForeignKey(LoanAccount, on_delete=models.CASCADE)
-    loan_num = models.CharField(unique=True, max_length=255)
+    loan_num = models.CharField(unique=True, max_length=255, editable=False, default="")
     principal = models.PositiveIntegerField()
     status = models.CharField(choices=STATUS_CHOICE, default='Pending', max_length=15)
     delete_status = models.CharField(choices=DELETE_STATUS_CHOICE, default='False', max_length=5, editable=False)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        add = not self.pk
+        super(LoanIssue, self).save(*args, **kwargs)
+        if add:
+            date = self.date_created.strftime("%y%m%d")
+            if self.pk < 10:
+                pk = "0" + str(self.pk)
+            else:
+                pk = str(self.pk)
+            self.loan_num = date + pk
+            kwargs["force_insert"] = False
+            super(LoanIssue, self).save(*args, **kwargs)
+
 
     def __str__(self):
         return self.account.owner.first_name
