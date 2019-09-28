@@ -18,7 +18,7 @@ DELETE_STATUS_CHOICE = (
 class ShareAccount(models.Model):
     owner = models.OneToOneField(Member, on_delete=models.CASCADE)
     current_share = models.PositiveIntegerField()
-    status = models.CharField(choices=ACCOUNT_STATUS_CHOICE, default='Deactivated', max_length=11)
+    status = models.CharField(choices=ACCOUNT_STATUS_CHOICE, default='Activated', max_length=11)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
 
