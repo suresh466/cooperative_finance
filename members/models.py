@@ -8,7 +8,7 @@ ACCOUNT_STATUS_CHOICE = (
         )
 
 class Member(models.Model):
-    mem_number = models.CharField(default="", unique=True, max_length=50, editable=False)
+    mem_number = models.PositiveIntegerField(default=0, blank=False, unique=True, editable=False)
     first_name = models.CharField(max_length=256)
     last_name = models.CharField(max_length=256)
     address = models.CharField(max_length=256)
@@ -22,9 +22,9 @@ class Member(models.Model):
         super(Member, self).save(*args, **kwargs)
         if add:
             if self.pk < 10:
-                pk = "0" + str(self.pk)
+                pk = 0 + self.pk
             else:
-                pk = str(self.pk)
+                pk = self.pk
             self.mem_number = pk
             kwargs["force_insert"] = False
             super(Member, self).save(*args, **kwargs)
