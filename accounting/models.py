@@ -10,6 +10,7 @@ DELETE_STATUS_CHOICE = (
 
 class IncomeType(models.Model):
     name = models.CharField(max_length=256)
+    code = models.CharField(unique=True, blank=True, null=True, max_length=50)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
 
@@ -30,6 +31,7 @@ class Income(models.Model):
 
 class ExpenseType(models.Model):
     name = models.CharField(max_length=256)
+    code = models.CharField(unique=True, blank=True, null=True, max_length=50)
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
 
