@@ -1,7 +1,6 @@
 {% if items_income %}
 <h1>{{title_income}} Report</h1>
 {% for item in items_income %}
-
 <table>
 	<colspan>
 	<col width="20%">
@@ -25,10 +24,10 @@
 		<td>{{item.received_from}}</td>
 		<td>todo<td>
 	</tr>
+	{% endif %}
 	<tr>
 		<td>Total Income:{{total_income}} </td>
 	</tr>
-	{% endif %}
 </table>
 {% endfor %}
 
