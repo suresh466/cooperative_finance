@@ -35,6 +35,7 @@ def income(request):
     context = {
         'items_income': incomes,
         'title_income': 'Income',
+        'total_income': incomes.aggregate(Sum('amount'))['amount__sum']
         }
 
     return render(request, template, context)
