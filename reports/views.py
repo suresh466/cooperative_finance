@@ -61,6 +61,7 @@ def expense(request):
     context = {
             'items_expenses': _expense(),
             'title_expenses': "Expense",
+            'total_expense': expenses.aggregate(Sum('amount'))['amount__sum']
             }
 
     return render(request, template, context)
