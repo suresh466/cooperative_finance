@@ -123,8 +123,6 @@ def _capital(year=datetime.now().year, month=datetime.now().month,yearly=False):
                 date_created__month = month)
         loans_issued = LoansIssue.objects.filter(delete_status = False, date_created__year = year,
                 date_created__month = month)
-        loan_payment_sum= loan_payment.aggregate(Sum('principal'))['principal__sum']
-        loans_issued_sum = loans_issued.aggregate(Sum('principal'))['principal__sum']
 
     shares_buy_sum = shares_buy.aggregate(Sum('number'))['number__sum']
     shares_sell_sum = shares_sell.aggregate(Sum('number'))['number__sum']
@@ -152,13 +150,31 @@ def capital(request):
     else:
         capital = _capital()
 
+    pre_context = {
+                0: capital.get('shares_buy_sum'),
+                1: capital.get('savings_deposit_sum'),
+                2: capital.get('loan_payment_sum'),
+                3: capital.get('shares_sell_sum'),
+                4: capital.get('savings_withdrawal_sum'),
+                5: capital.get('loans_issued_sum'),
+                }
+
+    def total_capital(keys):
+        for item in keys:
+            if pre_context.get(item) != None:
+                items_sum = 0
+                items_sum = items_sum + pre_context[item]
+                return items_sum
+
     context = {
-            'shares_buy_sum_capital': capital.get('shares_buy_sum','none'),
-            'shares_sell_sum_capital': capital.get('shares_sell_sum','none'),
-            'savings_deposit_sum_capital': capital.get('savings_deposit_sum','none'),
-            'savings_withdrawal_sum_capital': capital.get('savings_withdrawal_sum','none'),
-            'loan_payment_sum_capital': capital.get('loan_payment_sum','none'),
-            'loans_issued_sum_capital': capital.get('loans_issued_sum','none'),
+            'shares_buy_sum_capital': pre_context[0],
+            'savings_deposit_sum_capital': pre_context[1],
+            'loan_payment_sum_capital': pre_context[2],
+            'shares_sell_sum_capital': pre_context[3],
+            'savings_withdrawal_sum_capital': pre_context[4],
+            'loans_issued_sum_capital': pre_context[5],
+            'total_capital_additions': total_capital([0,1,2]),
+            'total_capital_deductions': total_capital([3,4,5]),
             'title_capital': 'Capital',
             }
 
